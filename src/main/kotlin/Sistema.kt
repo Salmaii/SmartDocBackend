@@ -27,7 +27,24 @@ class Sistema {
         consulta.data = data
         consulta.hora = hora
 
+        //to do motivo do paciente
+
         listConsulta.add(consulta)
         return consulta
+    }
+
+
+    fun cadastroPaciente(nomePaciente: String, idadePaciente: Int, cpfPaciente: String, telefonePaciente: String, numCartaoConsultaPaciente: String): Paciente {
+        var paciente: Paciente = Paciente()
+
+        paciente.numCartaoConsulta = numCartaoConsultaPaciente
+
+        paciente.nome = nomePaciente
+        paciente.idade = idadePaciente
+        paciente.cpf = cpfPaciente
+        paciente.telefone = telefonePaciente
+
+        listPaciente.add(paciente)
+        return paciente
     }
 }
