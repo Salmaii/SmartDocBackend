@@ -1,5 +1,3 @@
-package Consulta.Local
-
 open class Local {
     var cep: String?= null
     var cidade: String?= null
