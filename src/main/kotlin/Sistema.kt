@@ -47,4 +47,19 @@ class Sistema {
         listPaciente.add(paciente)
         return paciente
     }
+    fun cadastroMedico(nomeMedico:String, idadeMedico: Int, cpfMedico: String, telefonePaciente: String, numCrm: Int, especialização: String): Medico {
+        var medico:Medico = Medico()
+
+        medico.nome = nomeMedico
+        medico.idade = idadeMedico
+        medico.cpf = cpfMedico
+        medico.telefone = telefonePaciente
+
+        medico.crm = numCrm
+        medico.especializacao = especialização
+
+        listMedico.add(medico)
+
+        return medico
+    }
 }
