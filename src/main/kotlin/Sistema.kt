@@ -27,7 +27,6 @@ class Sistema {
         return consulta
     }
 
-
     fun cadastroPaciente(nomePaciente: String, idadePaciente: Int, cpfPaciente: String, telefonePaciente: String, numCartaoConsultaPaciente: String): Paciente {
         var paciente: Paciente = Paciente()
 
@@ -41,6 +40,7 @@ class Sistema {
         listPaciente.add(paciente)
         return paciente
     }
+
     fun cadastroMedico(nomeMedico:String, idadeMedico: Int, cpfMedico: String, telefonePaciente: String, numCrm: Int, especialização: String): Medico {
         var medico:Medico = Medico()
 

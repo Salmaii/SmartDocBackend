@@ -11,6 +11,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 import org.slf4j.event.Level
+import pessoa.medico.Medico
 import pessoa.paciente.Paciente
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -50,6 +51,8 @@ fun Application.sistema(testing: Boolean = false) {
     routing {
         meuindex()
         criarConsulta()
+        cadastroPaciente()
+        cadastroMedico()
 //        depositar()
 //        listarContas()
     }
@@ -62,9 +65,9 @@ fun Route.meuindex() {
                 h1 { +"SmartDoc"}
                 p { +"Tente chamar os outros endpoints para executar operações" }
                 ul {
-                    ol { +"POST - /contas/corrente        - Cria conta corrente" }
-                    ol { +"POST - /contas/poupanca        - Cria conta poupança" }
-                    ol { +"POST - /contas/investimento    - Cria conta investimento" }
+                    ol { +"POST - /consulta               - Cria consulta" }
+                    ol { +"POST - /cadastro/paciente      - Cadastro de paciente" }
+                    ol { +"POST - /cadastro/medico        - Cadastro de medico" }
                     ol { +"GET - /contas                  - Listar todas as contas"}
                 }
             }
@@ -77,6 +80,22 @@ fun Route.criarConsulta() {
         val dadosConsulta = call.receive<Consulta>()
         val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!, dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
         call.respond(consultaCriada)
+    }
+}
+
+fun Route.cadastroPaciente() {
+    post("/cadastro/paciente"){
+        val dadosCadastroPaciente = call.receive<Paciente>()
+        val pacienteCadastrado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
+        call.respond(pacienteCadastrado)
+    }
+}
+
+fun Route.cadastroMedico() {
+    post("/cadastro/medico"){
+        val dadosCadastroMedico = call.receive<Medico>()
+        val medicoCadastrado = sistema.cadastroMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
+        call.respond(medicoCadastrado)
     }
 }
 
