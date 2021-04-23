@@ -1,3 +1,1 @@
-
-rootProject.name = "smartDoc"
-
+rootProject.name = "smartdoc"
