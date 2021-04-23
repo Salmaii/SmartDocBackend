@@ -1,6 +1,6 @@
-package Pessoa.Funcionario
+package pessoa.funcionario
 
-import Pessoa.Pessoa
+import pessoa.Pessoa
 
 class Funcionario: Pessoa() {
     var matricula : String? = null

@@ -1,9 +1,7 @@
-package Pessoa.Paciente
+package pessoa.paciente
 
-import Pessoa.Pessoa
+import pessoa.Pessoa
 
 class Paciente: Pessoa() {
      var numCartaoConsulta: String? = null
-     var motivo: String? = null
-
 }

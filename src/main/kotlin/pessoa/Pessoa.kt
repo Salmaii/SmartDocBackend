@@ -1,4 +1,4 @@
-package Pessoa
+package pessoa
 
 open class Pessoa {
     open var id: Int? = null
