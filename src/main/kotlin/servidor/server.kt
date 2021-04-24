@@ -14,9 +14,10 @@ import org.slf4j.event.Level
 import pessoa.medico.Medico
 import pessoa.paciente.Paciente
 
+
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-val sistema = Sistema()
+val sistema:Sistema = Sistema()
 
 /**
  * Configura um módulo do servidor. Cada módulo pode ter vários endpoints (endereços) e podem ser
@@ -53,6 +54,11 @@ fun Application.sistema(testing: Boolean = false) {
         criarConsulta()
         cadastroPaciente()
         cadastroMedico()
+        listarPacientes()
+        listarMedicos()
+        listarConsultas()
+        listarFuncionarios()
+
 //        depositar()
 //        listarContas()
     }
@@ -87,7 +93,7 @@ fun Route.cadastroPaciente() {
     post("/cadastro/paciente"){
         val dadosCadastroPaciente = call.receive<Paciente>()
         val pacienteCadastrado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
-        call.respond(pacienteCadastrado)
+        call.respondText("Vem na mao, nao afoba nao")
     }
 }
 
@@ -99,16 +105,48 @@ fun Route.cadastroMedico() {
     }
 }
 
-//fun Route.depositar() {
-//    post("/contas/corrente/depositar"){
-//        val deposito = call.receive<Deposito>()
-//        banco.depositar(deposito.tipoConta, deposito.agencia, deposito.conta, deposito.valor)
-//        call.respondText { "DEPÓSITO EFETUADO COM SUCESSO" }
-//    }
-//}
-//
-//fun Route.listarContas() {
-//    get("/contas") {
-//        call.respond(banco.contasCorrente)
-//    }
-//}
+fun Route.listarPacientes(){
+    //Listar todos os Pacientes
+    get("/pacientes") {
+        call.respond(sistema.listPaciente)
+    }
+
+    //todo() mostrar um paciente buscando pelo numCartaoConsulta
+    val paciente : Paciente = Paciente()
+
+    /*get("/paciente/${paciente.numCartaoConsulta}"){
+        for (i in 0 until sistema.listPaciente.size) {
+            if(sistema.listPaciente.get(i) == paciente.numCartaoConsulta){
+                call.respond(paciente)
+            }
+        }
+    }*/
+}
+fun Route.listarMedicos(){
+    //Listar todos os Medicos
+    get("/medicos"){
+        call.respond(sistema.listMedico)
+    }
+
+    //todo() mostrar um medico buscando pelo crm
+
+}
+
+fun Route.listarConsultas(){
+    //Listar todas as Consultas
+    get("/consultas") {
+        call.respond(sistema.listConsulta)
+    }
+    //todo() mostrar uma consulta buscando pelo Codigo
+
+}
+
+fun Route.listarFuncionarios(){
+    //Listar todos os Funcionarios
+    get("/funcionarios"){
+        call.respond(sistema.listFuncionario)
+    }
+
+    //todo() mostrar um funcionario buscando pela matricula
+
+}
