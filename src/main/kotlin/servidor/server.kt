@@ -91,7 +91,7 @@ fun Route.cadastroPaciente() {
     post("/cadastro/paciente"){
         val dadosCadastroPaciente = call.receive<Paciente>()
         val pacienteCadastrado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
-        call.respondText("Vem na mao, nao afoba nao")
+        call.respond(pacienteCadastrado)
     }
 }
 
@@ -130,6 +130,8 @@ fun Route.listarMedicos(){
 
     val medico:Medico = Medico()
 
+    //Procurar por id(crm)
+
     get("/medico/${medico.crm}"){
         for(i in 0 until sistema.listMedico.size){
             if(sistema.listMedico[i].crm == medico.crm){
@@ -147,6 +149,8 @@ fun Route.listarConsultas(){
 
     val consulta: Consulta = Consulta()
 
+    //Procurar por id(codigo)
+
     get("/Consulta/${consulta.codigo}"){
         for(i in 0 until sistema.listConsulta.size){
             if(sistema.listConsulta[i].codigo == consulta.codigo){
@@ -163,6 +167,8 @@ fun Route.listarFuncionarios(){
     }
 
     val funcionario:Funcionario = Funcionario()
+
+    //Procurar por id(matricula)
 
     get("/funcionario/${funcionario.matricula}"){
         for(i in 0 until sistema.listFuncionario.size){
