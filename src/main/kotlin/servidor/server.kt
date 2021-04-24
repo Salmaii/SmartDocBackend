@@ -58,6 +58,7 @@ fun Application.sistema(testing: Boolean = false) {
         criarConsulta()
         cadastroPaciente()
         cadastroMedico()
+        cadastroFuncionario()
 
         //Listagem
 
@@ -83,6 +84,7 @@ fun Application.sistema(testing: Boolean = false) {
         deletarPacienteId()
         deletarFuncionarios()
         deletarFuncioanrioId()
+
     }
 }
 
