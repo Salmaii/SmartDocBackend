@@ -13,9 +13,14 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 - 
 <p>
 
-##Endpoint
+## Endpoint
 
-| Método | URL                                     | Descrição             |
-| ------ | --------------------------------------- | --------------------- |
-| POST   | http://localhost:9999/cadastro/paciente | Cadastra um paciente. |
-| POST   | http://localhost:9999/cadastro/medico   | Cadastra um médico.   |
+| Método | URL                                        | Descrição                |
+| ------ | ------------------------------------------ | ------------------------ |
+| POST   | http://localhost:9999/cadastro/paciente    | Cadastra um paciente.    |
+| POST   | http://localhost:9999/cadastro/medico      | Cadastra um médico.      |
+| POST   | http://localhost:9999/cadastro/funcionario | Cadastra um funcionario  |
+| POST   | http://localhost:9999/consulta             | Registra uma consulta    |
+| GET    | http://localhost:9999/pacientes            | Lista todos os pacientes |
+
+## Integrantes do Projeto
