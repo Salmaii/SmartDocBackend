@@ -13,19 +13,21 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 
 <p>
 
-## Endpoint
+## Endpoints
 
-| Método | URL                                                | Descrição                     |
-| ------ | -------------------------------------------------- | ----------------------------- |
-| POST   | http://localhost:9999/cadastro/paciente            | Cadastra um paciente.         |
-| POST   | http://localhost:9999/cadastro/medico              | Cadastra um médico.           |
-| POST   | http://localhost:9999/cadastro/funcionario         | Cadastra um funcionario       |
-| POST   | http://localhost:9999/consulta                     | Registra uma consulta         |
-| GET    | http://localhost:9999/pacientes                    | Lista todos os pacientes      |
-| GET    | http://localhost:9999/paciente/{numCartaoConsulta} | Procura paciente por id       |
-| GET    | http://localhost:9999/medico/{crm?}                | Procurar médicos por id (CRM) |
-| DELETE | http://localhost:9999/consultas                    | Deleta todas as consultas     |
-| DELETE | http://localhost:9999/consultas/{codigo?}          | Deleta a consultas por id     |
+| Método | URL                                                | Descrição                            |
+| ------ | -------------------------------------------------- | ------------------------------------ |
+| POST   | http://localhost:9999/cadastro/paciente            | Cadastra um paciente.                |
+| POST   | http://localhost:9999/cadastro/medico              | Cadastra um médico.                  |
+| POST   | http://localhost:9999/cadastro/funcionario         | Cadastra um funcionario              |
+| POST   | http://localhost:9999/consulta                     | Registra uma consulta                |
+| GET    | http://localhost:9999/pacientes                    | Lista todos os pacientes             |
+| GET    | http://localhost:9999/paciente/{numCartaoConsulta} | Procura paciente por id              |
+| GET    | http://localhost:9999/medico/{crm?}                | Procurar médicos por id (CRM)        |
+| DELETE | http://localhost:9999/consultas                    | Deleta todas as consultas            |
+| DELETE | http://localhost:9999/consultas/{codigo?}          | Deleta a consultas por id            |
+| DELETE | http://localhost:9999/medicos                      | Deleta registros de todo os médicos. |
+| DELETE | http://localhost:9999/medicos/{crm?}               | Deleta registro de médicos por id    |
 
 ## Integrantes do Projeto
 
@@ -35,3 +37,10 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 | Gabriel Henrique Alberto de Jesus | 1812130083 |
 | Gabriel Salmai Camargo Farias     | 1922130017 |
 | Luís Eduardo dos Anjos            | 1912130019 |
+
+## Próximos passos
+
+<p>
+- Pacientes poder avaliar médicos <br>
+- Pacientes poderem avaliar atendimentos realizados pelos funcionário <br>
+<p>
