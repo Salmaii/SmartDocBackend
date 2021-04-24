@@ -11,6 +11,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 import org.slf4j.event.Level
+import pessoa.funcionario.Funcionario
 import pessoa.medico.Medico
 import pessoa.paciente.Paciente
 
@@ -58,9 +59,6 @@ fun Application.sistema(testing: Boolean = false) {
         listarMedicos()
         listarConsultas()
         listarFuncionarios()
-
-//        depositar()
-//        listarContas()
     }
 }
 
@@ -111,25 +109,34 @@ fun Route.listarPacientes(){
         call.respond(sistema.listPaciente)
     }
 
-    //todo() mostrar um paciente buscando pelo numCartaoConsulta
+    //Procurar por id(numCartaiConsulta)
+
     val paciente : Paciente = Paciente()
 
-    /*get("/paciente/${paciente.numCartaoConsulta}"){
+    get("/paciente/${paciente.numCartaoConsulta}"){
         for (i in 0 until sistema.listPaciente.size) {
-            if(sistema.listPaciente.get(i) == paciente.numCartaoConsulta){
+            if(sistema.listPaciente[i].numCartaoConsulta == paciente.numCartaoConsulta){
                 call.respond(paciente)
             }
         }
-    }*/
+    }
 }
+
 fun Route.listarMedicos(){
     //Listar todos os Medicos
     get("/medicos"){
         call.respond(sistema.listMedico)
     }
 
-    //todo() mostrar um medico buscando pelo crm
+    val medico:Medico = Medico()
 
+    get("/medico/${medico.crm}"){
+        for(i in 0 until sistema.listMedico.size){
+            if(sistema.listMedico[i].crm == medico.crm){
+                call.respond(medico)
+            }
+        }
+    }
 }
 
 fun Route.listarConsultas(){
@@ -137,8 +144,16 @@ fun Route.listarConsultas(){
     get("/consultas") {
         call.respond(sistema.listConsulta)
     }
-    //todo() mostrar uma consulta buscando pelo Codigo
 
+    val consulta: Consulta = Consulta()
+
+    get("/Consulta/${consulta.codigo}"){
+        for(i in 0 until sistema.listConsulta.size){
+            if(sistema.listConsulta[i].codigo == consulta.codigo){
+                call.respond(consulta)
+            }
+        }
+    }
 }
 
 fun Route.listarFuncionarios(){
@@ -147,6 +162,13 @@ fun Route.listarFuncionarios(){
         call.respond(sistema.listFuncionario)
     }
 
-    //todo() mostrar um funcionario buscando pela matricula
+    val funcionario:Funcionario = Funcionario()
 
+    get("/funcionario/${funcionario.matricula}"){
+        for(i in 0 until sistema.listFuncionario.size){
+            if(sistema.listFuncionario[i].matricula == funcionario.matricula){
+                call.respond(funcionario)
+            }
+        }
+    }
 }
