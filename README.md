@@ -15,13 +15,17 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 
 ## Endpoint
 
-| Método | URL                                        | Descrição                |
-| ------ | ------------------------------------------ | ------------------------ |
-| POST   | http://localhost:9999/cadastro/paciente    | Cadastra um paciente.    |
-| POST   | http://localhost:9999/cadastro/medico      | Cadastra um médico.      |
-| POST   | http://localhost:9999/cadastro/funcionario | Cadastra um funcionario  |
-| POST   | http://localhost:9999/consulta             | Registra uma consulta    |
-| GET    | http://localhost:9999/pacientes            | Lista todos os pacientes |
+| Método | URL                                                | Descrição                     |
+| ------ | -------------------------------------------------- | ----------------------------- |
+| POST   | http://localhost:9999/cadastro/paciente            | Cadastra um paciente.         |
+| POST   | http://localhost:9999/cadastro/medico              | Cadastra um médico.           |
+| POST   | http://localhost:9999/cadastro/funcionario         | Cadastra um funcionario       |
+| POST   | http://localhost:9999/consulta                     | Registra uma consulta         |
+| GET    | http://localhost:9999/pacientes                    | Lista todos os pacientes      |
+| GET    | http://localhost:9999/paciente/{numCartaoConsulta} | Procura paciente por id       |
+| GET    | http://localhost:9999/medico/{crm?}                | Procurar médicos por id (CRM) |
+| DELETE | http://localhost:9999/consultas                    | Deleta todas as consultas     |
+| DELETE | http://localhost:9999/consultas/{codigo?}          | Deleta a consultas por id     |
 
 ## Integrantes do Projeto
 
