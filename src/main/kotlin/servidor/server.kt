@@ -58,6 +58,7 @@ fun Application.sistema(testing: Boolean = false) {
         criarConsulta()
         cadastroPaciente()
         cadastroMedico()
+        cadastroFuncionario()
 
         //Listagem
 
@@ -83,6 +84,7 @@ fun Application.sistema(testing: Boolean = false) {
         deletarPacienteId()
         deletarFuncionarios()
         deletarFuncioanrioId()
+
     }
 }
 
@@ -124,8 +126,8 @@ fun Route.cadastroMedico() {
 fun Route.cadastroFuncionario() {
     post("/cadastro/funcionario"){
         val dadosCadastroFuncionario = call.receive<Funcionario>()
-        val funcionarioCriado = sistema.cadastroFuncionario(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
-        call.respond(pacienteCadastrado)
+        val funcionarioCriado = sistema.cadastroFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
+        call.respond(funcionarioCriado)
     }
 }
 
@@ -294,7 +296,7 @@ fun Route.deletarPacientes(){
 
 //deletar pacientes por id (numCartaoConsulta)
 fun Route.deletarPacienteId(){
-    get("/paciente/{numCartaoConsulta}"){
+    delete("/paciente/{numCartaoConsulta?}"){
         var numCartaoConsulta = call.parameters["numCartaoConsulta"]
         if(numCartaoConsulta != null){
             for (i in 0 until sistema.listPaciente.size) {
@@ -309,7 +311,7 @@ fun Route.deletarPacienteId(){
 }
 
 //deletar todos os funcionarios
-fun Route.deletarFuncionarios() {
+fun Route.deletarFuncionarios(){
     delete("/funcionarios") {
         call.respond(sistema.listFuncionario)
     }
@@ -317,16 +319,16 @@ fun Route.deletarFuncionarios() {
 
 //deletar funcionarios por id (matricula)
 fun Route.deletarFuncioanrioId(){
-    delete("/paciente/{numCartaoConsulta}"){
-        var numCartaoConsulta = call.parameters["numCartaoConsulta"]
-        if(numCartaoConsulta != null){
-            for (i in 0 until sistema.listPaciente.size) {
-                if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
-                    call.respond(sistema.listPaciente[i])
+    delete("/funcionario/{matricula?}"){
+        var matricula = call.parameters["matricula"]
+        if(matricula != null){
+            for (i in 0 until sistema.listFuncionario.size) {
+                if(sistema.listFuncionario[i].matricula == matricula){
+                    call.respond(sistema.listFuncionario[i])
                 }
             }
         }else{
-            call.respondText {"Cartão de Consulta invalida"}
+            call.respondText {"matricula invalida"}
         }
     }
 }
