@@ -52,13 +52,27 @@ fun Application.sistema(testing: Boolean = false) {
      */
     routing {
         meuindex()
+
+        //Cadastro
+
         criarConsulta()
         cadastroPaciente()
         cadastroMedico()
+
+        //Listagem
+
         listarPacientes()
         listarMedicos()
         listarConsultas()
         listarFuncionarios()
+
+        //Procurar
+
+        procurarPaciente()
+        procurarMedico()
+        procurarConsulta()
+        procurarFuncionario()
+
     }
 }
 
@@ -98,83 +112,109 @@ fun Route.cadastroPaciente() {
 fun Route.cadastroMedico() {
     post("/cadastro/medico"){
         val dadosCadastroMedico = call.receive<Medico>()
-        val medicoCadastrado = sistema.cadastroMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
+        val medicoCadastrado = sistema.cadastroMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!,
+            dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
         call.respond(medicoCadastrado)
     }
 }
 
-fun Route.listarPacientes(){
     //Listar todos os Pacientes
+
+fun Route.listarPacientes() {
     get("/pacientes") {
         call.respond(sistema.listPaciente)
     }
+}
 
     //Procurar por id(numCartaiConsulta)
 
-    val paciente : Paciente = Paciente()
-
-    get("/paciente/${paciente.numCartaoConsulta}"){
-        for (i in 0 until sistema.listPaciente.size) {
-            if(sistema.listPaciente[i].numCartaoConsulta == paciente.numCartaoConsulta){
-                call.respond(paciente)
+fun Route.procurarPaciente(){
+    get("/paciente/{numCartaoConsulta}"){
+        var numCartaoConsulta = call.parameters["numCartaoConsulta"]
+        if(numCartaoConsulta != null){
+            for (i in 0 until sistema.listPaciente.size) {
+                if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
+                    call.respond(sistema.listPaciente[i])
+                }
             }
+        }else{
+            call.respondText {"Cartão de Consulta invalida"}
         }
     }
 }
 
-fun Route.listarMedicos(){
     //Listar todos os Medicos
+
+fun Route.listarMedicos(){
     get("/medicos"){
         call.respond(sistema.listMedico)
     }
-
-    val medico:Medico = Medico()
+}
 
     //Procurar por id(crm)
 
-    get("/medico/${medico.crm}"){
-        for(i in 0 until sistema.listMedico.size){
-            if(sistema.listMedico[i].crm == medico.crm){
-                call.respond(medico)
+fun Route.procurarMedico(){
+    get("/medicos/{crm?}"){
+        var crm = call.parameters["crm"]
+        if(crm != null) {
+            for (i in 0 until sistema.listMedico.size) {
+                if (sistema.listMedico[i].crm.toString() == crm) {
+                    call.respond(sistema.listMedico[i])
+                }
             }
+        }else{
+            call.respondText { "Crm invalido" }
         }
     }
 }
 
-fun Route.listarConsultas(){
     //Listar todas as Consultas
+
+fun Route.listarConsultas() {
+
     get("/consultas") {
         call.respond(sistema.listConsulta)
     }
-
-    val consulta: Consulta = Consulta()
+}
 
     //Procurar por id(codigo)
 
-    get("/Consulta/${consulta.codigo}"){
-        for(i in 0 until sistema.listConsulta.size){
-            if(sistema.listConsulta[i].codigo == consulta.codigo){
-                call.respond(consulta)
+fun Route.procurarConsulta(){
+    get("/Consulta/{codigo?}"){
+        var codigo = call.parameters["codigo"]
+        if(codigo != null){
+            for (i in 0 until sistema.listConsulta.size) {
+                if (sistema.listConsulta[i].codigo == codigo) {
+                    call.respond(sistema.listConsulta[i])
+                }
             }
+        } else {
+            call.respondText { "Codigo de consulta invalido" }
         }
     }
 }
 
-fun Route.listarFuncionarios(){
     //Listar todos os Funcionarios
-    get("/funcionarios"){
+
+fun Route.listarFuncionarios() {
+    get("/funcionarios") {
         call.respond(sistema.listFuncionario)
     }
-
-    val funcionario:Funcionario = Funcionario()
+}
 
     //Procurar por id(matricula)
 
-    get("/funcionario/${funcionario.matricula}"){
-        for(i in 0 until sistema.listFuncionario.size){
-            if(sistema.listFuncionario[i].matricula == funcionario.matricula){
-                call.respond(funcionario)
+fun Route.procurarFuncionario() {
+    get("/funcionario/{matricula?}"){
+        var matricula = call.parameters["matricula"]
+        if(matricula != null){
+            for (i in 0 until sistema.listFuncionario.size) {
+                if (sistema.listFuncionario[i].matricula == matricula) {
+                    call.respond(sistema.listFuncionario[i])
+                }
             }
+        }else{
+            call.respondText {"Matricula invalidade"}
         }
     }
 }
