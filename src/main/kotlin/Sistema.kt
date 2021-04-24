@@ -42,7 +42,7 @@ class Sistema {
     }
 
     fun cadastroMedico(nomeMedico:String, idadeMedico: Int, cpfMedico: String, telefonePaciente: String, numCrm: Int, especialização: String): Medico {
-        var medico:Medico = Medico()
+        var medico: Medico = Medico()
 
         medico.nome = nomeMedico
         medico.idade = idadeMedico
@@ -56,4 +56,19 @@ class Sistema {
 
         return medico
     }
+
+    fun cadastroFuncionario(nomeFuncionario: String, idadeFuncionario: Int, cpfFuncionario: String, telefoneFuncionario: String, matriculaFuncionario: String): Funcionario {
+        var funcionario: Funcionario = Funcionario()
+
+        funcionario.nome = nomeFuncionario
+        funcionario.idade = idadeFuncionario
+        funcionario.cpf = cpfFuncionario
+        funcionario.telefone = telefoneFuncionario
+        funcionario.matricula = matriculaFuncionario
+
+        listFuncionario.add(funcionario)
+
+        return funcionario
+    }
+
 }

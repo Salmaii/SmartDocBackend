@@ -73,6 +73,16 @@ fun Application.sistema(testing: Boolean = false) {
         procurarConsulta()
         procurarFuncionario()
 
+        //Deletar
+
+        deletarConsultas()
+        deletarConsultaId()
+        deletarMedicos()
+        deletarMedicoId()
+        deletarPacientes()
+        deletarPacienteId()
+        deletarFuncionarios()
+        deletarFuncioanrioId()
     }
 }
 
@@ -93,13 +103,6 @@ fun Route.meuindex() {
     }
 }
 
-fun Route.criarConsulta() {
-    post("/consulta"){
-        val dadosConsulta = call.receive<Consulta>()
-        val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!, dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
-        call.respond(consultaCriada)
-    }
-}
 
 fun Route.cadastroPaciente() {
     post("/cadastro/paciente"){
@@ -115,6 +118,23 @@ fun Route.cadastroMedico() {
         val medicoCadastrado = sistema.cadastroMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!,
             dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
         call.respond(medicoCadastrado)
+    }
+}
+
+fun Route.cadastroFuncionario() {
+    post("/cadastro/funcionario"){
+        val dadosCadastroFuncionario = call.receive<Funcionario>()
+        val funcionarioCriado = sistema.cadastroFuncionario(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
+        call.respond(pacienteCadastrado)
+    }
+}
+
+//criando consulta
+fun Route.criarConsulta() {
+    post("/consulta"){
+        var dadosConsulta = call.receive<Consulta>()
+        val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!, dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
+        call.respond(consultaCriada)
     }
 }
 
@@ -215,6 +235,98 @@ fun Route.procurarFuncionario() {
             }
         }else{
             call.respondText {"Matricula invalidade"}
+        }
+    }
+}
+
+    //deletar todas as consultas
+fun Route.deletarConsultas() {
+    delete("/consultas") {
+        call.respond(sistema.listConsulta)
+    }
+}
+
+//deletar consulta por id (codigo)
+fun Route.deletarConsultaId(){
+    delete("/Consulta/{codigo?}"){
+        var codigo = call.parameters["codigo"]
+        if(codigo != null){
+            for (i in 0 until sistema.listConsulta.size) {
+                if (sistema.listConsulta[i].codigo == codigo) {
+                    call.respond(sistema.listConsulta[i])
+                }
+            }
+        } else {
+            call.respondText { "Codigo de consulta invalido" }
+        }
+    }
+}
+
+//deletar todos os medicos
+fun Route.deletarMedicos() {
+    delete("/medicos") {
+        call.respond(sistema.listMedico)
+    }
+}
+
+//deletar medicos por id (crm)
+fun Route.deletarMedicoId(){
+    delete ("/medicos/{crm?}"){
+        var crm = call.parameters["crm"]
+        if(crm != null) {
+            for (i in 0 until sistema.listMedico.size) {
+                if (sistema.listMedico[i].crm.toString() == crm) {
+                    call.respond(sistema.listMedico[i])
+                }
+            }
+        }else{
+            call.respondText { "Crm invalido" }
+        }
+    }
+}
+
+//deletar todos os pacientes
+fun Route.deletarPacientes(){
+    delete("/pacientes") {
+        call.respond(sistema.listPaciente)
+    }
+}
+
+//deletar pacientes por id (numCartaoConsulta)
+fun Route.deletarPacienteId(){
+    get("/paciente/{numCartaoConsulta}"){
+        var numCartaoConsulta = call.parameters["numCartaoConsulta"]
+        if(numCartaoConsulta != null){
+            for (i in 0 until sistema.listPaciente.size) {
+                if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
+                    call.respond(sistema.listPaciente[i])
+                }
+            }
+        }else{
+            call.respondText {"Cartão de Consulta invalida"}
+        }
+    }
+}
+
+//deletar todos os funcionarios
+fun Route.deletarFuncionarios() {
+    delete("/funcionarios") {
+        call.respond(sistema.listFuncionario)
+    }
+}
+
+//deletar funcionarios por id (matricula)
+fun Route.deletarFuncioanrioId(){
+    delete("/paciente/{numCartaoConsulta}"){
+        var numCartaoConsulta = call.parameters["numCartaoConsulta"]
+        if(numCartaoConsulta != null){
+            for (i in 0 until sistema.listPaciente.size) {
+                if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
+                    call.respond(sistema.listPaciente[i])
+                }
+            }
+        }else{
+            call.respondText {"Cartão de Consulta invalida"}
         }
     }
 }
