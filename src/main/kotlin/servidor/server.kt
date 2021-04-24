@@ -84,7 +84,9 @@ fun Application.sistema(testing: Boolean = false) {
         deletarPacienteId()
         deletarFuncionarios()
         deletarFuncioanrioId()
-
+        //updatePaciente()
+        //updateMedico()
+        //updateFuncionario()
     }
 }
 
@@ -95,16 +97,31 @@ fun Route.meuindex() {
                 h1 { +"SmartDoc"}
                 p { +"Tente chamar os outros endpoints para executar operações" }
                 ul {
-                    ol { +"POST - /consulta               - Cria consulta" }
-                    ol { +"POST - /cadastro/paciente      - Cadastro de paciente" }
-                    ol { +"POST - /cadastro/medico        - Cadastro de medico" }
-                    ol { +"GET - /contas                  - Listar todas as contas"}
+                    ol { +"POST - /cadastro/paciente            - Cadastro de paciente" }
+                    ol { +"POST - /cadastro/medico              - Cadastro de medico" }
+                    ol { +"POST - /cadastro/funcionario         - Cadastro de funcionario"}
+                    ol { +"POST - /consulta                     - Cria consulta" }
+                    ol { +"GET  - /pacientes                    - Listar todos os pacientes"}
+                    ol { +"GET  - /paciente/{numCartaoConsulta} - Procurar por id{numCartaoConsulta}"}
+                    ol { +"GET  - /medicos/{crm?}               - Procurar por id{crm}"}
+                    ol { +"GET  - /consultas                    - Listar todas as consultas"}
+                    ol { +"GET  - /consulta/{codigo?}           - Procurar por id{codigo?}"}
+                    ol { +"GET  - /funcionarios                 - Listar todos os funcionarios"}
+                    ol { +"GET  - /funcionario/{matricula?}     - Procurar por id{matricula}"}
+                    ol { +"DELETE - /consultas                  - Deletar todas as consultas"}
+                    ol { +"DELETE - /consulta{codigo?}          - Deletar consulta por id{codigo}"}
+                    ol { +"DELETE - /medicos                    - Deletar todos os medicos"}
+                    ol { +"DELETE - /medicos/{crm?}             - Deletar medicos por id{}crm"}
+                    ol { +"DELETE - /pacientes                  - Deletar todos os pacientes"}
+                    ol { +"DELETE - /paciente/numCartaoConsulta - Deletar pacientes por id{numCartaoConsulta}"}
+                    ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
+                    ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
+                    ol { +"UPDATE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
                 }
             }
         }
     }
 }
-
 
 fun Route.cadastroPaciente() {
     post("/cadastro/paciente"){
@@ -134,7 +151,7 @@ fun Route.cadastroFuncionario() {
 //criando consulta
 fun Route.criarConsulta() {
     post("/consulta"){
-        var dadosConsulta = call.receive<Consulta>()
+        val dadosConsulta = call.receive<Consulta>()
         val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!, dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
         call.respond(consultaCriada)
     }
@@ -332,3 +349,34 @@ fun Route.deletarFuncioanrioId(){
         }
     }
 }
+
+/*
+//Update
+fun Route.updatePaciente(){
+    put("/update/paciente"){
+        val dadosCadastroPaciente = call.receive<Paciente>()
+        val pacienteAtualizado = sistema.updatePaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
+        call.respond(pacienteAtualizado)
+
+    }
+}
+
+fun Route.updateMedico(){
+    put("/update/medico"){
+        val dadosCadastroMedico = call.receive<Medico>()
+        val medicoAtualizado = sistema.updateMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!,
+            dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
+        call.respond(medicoAtualizado)
+
+    }
+}
+
+fun Route.updateFuncionario(){
+    put("/update/funcionario"){
+        val dadosCadastroFuncionario = call.receive<Funcionario>()
+        val funcionarioAtualizado = sistema.updateFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
+        call.respond(funcionarioAtualizado)
+
+    }
+}
+*/
