@@ -7,11 +7,10 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 
 ### Tecnologias utilizadas
 
-<p>
+<h4><b> 
 - Kotlin <br>
-- Ktor <br>
-
-<p>
+- Ktor <br> <br>
+</b></h4>
 
 ## Endpoints
 
