@@ -10,7 +10,7 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 <p>
 - Kotlin <br>
 - Ktor <br>
-- 
+
 <p>
 
 ## Endpoint
@@ -24,3 +24,10 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 | GET    | http://localhost:9999/pacientes            | Lista todos os pacientes |
 
 ## Integrantes do Projeto
+
+| Nome                              | Matrícula  |
+| --------------------------------- | ---------- |
+| Erika Bianca Csan                 | 1612082057 |
+| Gabriel Henrique Alberto de Jesus | 1812130083 |
+| Gabriel Salmai Camargo Farias     | 1922130017 |
+| Luís Eduardo dos Anjos            | 1912130019 |
