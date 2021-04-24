@@ -40,7 +40,7 @@ Diretamente pela API o usuário/paciente tem acesso a maiores informações sobr
 
 ## Próximos passos
 
-<h4><b> - 
--Pacientes poder avaliar médicos <br>
+<h4><b> 
+- Pacientes poder avaliar médicos <br>
 - Pacientes poderem avaliar atendimentos realizados pelos funcionário <br>
 </b></h4>
