@@ -121,8 +121,8 @@ fun Route.meuindex() {
                     ol { +"DELETE - /medicos                    - Deletar todos os medicos"}
                     ol { +"DELETE - /medicos/{crm?}             - Deletar medicos por id{}crm"}
                     ol { +"DELETE - /pacientes                  - Deletar todos os pacientes"}
-                    ol { +"DELETE - /paciente/numCartaoConsulta - Deletar pacientes por id{numCartaoConsulta}"}
-                    ol { +"DELETE - /deletarfuncionarios               - Deletar todos os funcionarios"}
+                    ol { +"DELETE - /paciente/{numCartaoConsulta?} - Deletar pacientes por id{numCartaoConsulta}"}
+                    ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
                     ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
                     ol { +"UPDATE - /paciente/{cpf?}            - Update completo de pacientes por id{cpf}"}
                     ol { +"UPDATE - /medico/{crm?}              - Update completo de medicos por id{crm}"}
@@ -349,7 +349,7 @@ fun Route.deletarPacienteId(){
 //deletar todos os funcionarios
 
 fun Route.deletarFuncionarios(){
-    delete("/deletarfuncionarios") {
+    delete("/funcionarios") {
         sistema.listFuncionario.clear()
     }
 }
