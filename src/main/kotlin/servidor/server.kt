@@ -140,6 +140,7 @@ fun Route.cadastroPaciente() {
         val dadosCadastroPaciente = call.receive<Paciente>()
         val pacienteCadastrado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
         call.respond(pacienteCadastrado)
+
     }
 }
 
