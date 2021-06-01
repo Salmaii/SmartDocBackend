@@ -71,7 +71,7 @@ class Sistema {
         return funcionario
     }
 
-    /*
+
 
     fun updatePaciente(nomePaciente: String, idadePaciente: Int, cpfPaciente: String, telefonePaciente: String, numCartaoConsultaPaciente: String): Paciente {
         var paciente: Paciente = Paciente()
@@ -83,7 +83,6 @@ class Sistema {
         paciente.cpf = cpfPaciente
         paciente.telefone = telefonePaciente
 
-        listPaciente.add(paciente)
         return paciente
     }
 
@@ -98,26 +97,20 @@ class Sistema {
         medico.crm = numCrm
         medico.especializacao = especialização
 
-        listMedico.add(medico)
-
         return medico
     }
 
-    fun updateFuncionario(nomeFuncionario: String, idadeFuncionario: Int, cpfFuncionario: String, telefoneFuncionario: String, matriculaFuncionario: String): Funcionario {
-        var funcionario: Funcionario = Funcionario()
 
-        funcionario.nome = nomeFuncionario
-        funcionario.idade = idadeFuncionario
-        funcionario.cpf = cpfFuncionario
-        funcionario.telefone = telefoneFuncionario
-        funcionario.matricula = matriculaFuncionario
+   fun updateFuncionario(nomeFuncionario: String, idadeFuncionario: Int, cpfFuncionario: String, telefoneFuncionario: String, matriculaFuncionario: String): Funcionario {
+       var funcionario: Funcionario = Funcionario()
 
-        listFuncionario.add(funcionario)
+       funcionario.nome = nomeFuncionario
+       funcionario.idade = idadeFuncionario
+       funcionario.cpf = cpfFuncionario
+       funcionario.telefone = telefoneFuncionario
+       funcionario.matricula = matriculaFuncionario
 
-        return funcionario
-    }
-
-
-     */
+       return funcionario
+   }
 
 }

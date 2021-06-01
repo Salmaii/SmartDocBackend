@@ -84,9 +84,14 @@ fun Application.sistema(testing: Boolean = false) {
         deletarPacienteId()
         deletarFuncionarios()
         deletarFuncioanrioId()
-        //updatePaciente()
-        //updateMedico()
-        //updateFuncionario()
+
+        //Update
+
+        updatePaciente()
+        updateMedico()
+        updateFuncionario()
+
+
     }
 }
 
@@ -116,12 +121,16 @@ fun Route.meuindex() {
                     ol { +"DELETE - /paciente/numCartaoConsulta - Deletar pacientes por id{numCartaoConsulta}"}
                     ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
                     ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
-                    ol { +"UPDATE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
+                    ol { +"UPDATE - /paciente/{cpf?}            - Update completo de pacientes por id{cpf}"}
+                    ol { +"UPDATE - /medico/{crm?}              - Update completo de medicos por id{crm}"}
+                    ol { +"UPDATE - /funcionario/{matricula?}   - Update completo de funcionarios por id{matricula}"}
                 }
             }
         }
     }
 }
+
+
 
 fun Route.cadastroPaciente() {
     post("/cadastro/paciente"){
@@ -350,33 +359,56 @@ fun Route.deletarFuncioanrioId(){
     }
 }
 
-/*
-//Update
+//Update Completo Paciente
 fun Route.updatePaciente(){
-    put("/update/paciente"){
+    put("/paciente/{cpf?}"){
+        var cpf = call.parameters["cpf"]
         val dadosCadastroPaciente = call.receive<Paciente>()
-        val pacienteAtualizado = sistema.updatePaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
-        call.respond(pacienteAtualizado)
-
+        if(cpf != null){
+            for (i in 0 until sistema.listPaciente.size) {
+                if(sistema.listPaciente[i].cpf == cpf){
+                    val pacienteAtualizado = sistema.updatePaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
+                    call.respond(pacienteAtualizado)
+                }
+            }
+        }else{
+            call.respondText {"cpf invalido"}
+        }
     }
 }
 
+//Update Completo Paciente
 fun Route.updateMedico(){
-    put("/update/medico"){
+    put("/medico/{crm?}"){
+        var crm = call.parameters["crm"]
         val dadosCadastroMedico = call.receive<Medico>()
-        val medicoAtualizado = sistema.updateMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!,
-            dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
-        call.respond(medicoAtualizado)
-
+        if(crm != null){
+            for (i in 0 until sistema.listMedico.size) {
+                if (sistema.listMedico[i].crm.toString() == crm) {
+                    val medicoAtualizado = sistema.updateMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
+                    call.respond(medicoAtualizado)
+                }
+            }
+        }else{
+            call.respondText {"crm invalido"}
+        }
     }
 }
 
+//Update Completo Paciente
 fun Route.updateFuncionario(){
-    put("/update/funcionario"){
+    put("/funcionario/{matricula?}"){
+        var matricula = call.parameters["matricula"]
         val dadosCadastroFuncionario = call.receive<Funcionario>()
-        val funcionarioAtualizado = sistema.updateFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
-        call.respond(funcionarioAtualizado)
-
+        if(matricula != null){
+            for (i in 0 until sistema.listFuncionario.size) {
+                if(sistema.listFuncionario[i].matricula == matricula){
+                    val funcionarioAtualizado = sistema.updateFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
+                    call.respond(funcionarioAtualizado)
+                }
+            }
+        }else{
+            call.respondText {"matricula invalida"}
+        }
     }
 }
-*/
