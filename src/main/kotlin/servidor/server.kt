@@ -98,6 +98,9 @@ fun Application.sistema(testing: Boolean = false) {
 fun Route.meuindex() {
     get("/") {
         call.respondHtml {
+            head{
+                title{ +"SmartDoc"}
+            }
             body {
                 h1 { +"SmartDoc"}
                 p { +"Tente chamar os outros endpoints para executar operações" }
@@ -114,12 +117,12 @@ fun Route.meuindex() {
                     ol { +"GET  - /funcionarios                 - Listar todos os funcionarios"}
                     ol { +"GET  - /funcionario/{matricula?}     - Procurar por id{matricula}"}
                     ol { +"DELETE - /consultas                  - Deletar todas as consultas"}
-                    ol { +"DELETE - /consulta{codigo?}          - Deletar consulta por id{codigo}"}
+                    ol { +"DELETE - /consulta/{codigo?}          - Deletar consulta por id{codigo}"}
                     ol { +"DELETE - /medicos                    - Deletar todos os medicos"}
                     ol { +"DELETE - /medicos/{crm?}             - Deletar medicos por id{}crm"}
                     ol { +"DELETE - /pacientes                  - Deletar todos os pacientes"}
                     ol { +"DELETE - /paciente/numCartaoConsulta - Deletar pacientes por id{numCartaoConsulta}"}
-                    ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
+                    ol { +"DELETE - /deletarfuncionarios               - Deletar todos os funcionarios"}
                     ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
                     ol { +"UPDATE - /paciente/{cpf?}            - Update completo de pacientes por id{cpf}"}
                     ol { +"UPDATE - /medico/{crm?}              - Update completo de medicos por id{crm}"}
@@ -228,7 +231,7 @@ fun Route.listarConsultas() {
     //Procurar por id(codigo)
 
 fun Route.procurarConsulta(){
-    get("/Consulta/{codigo?}"){
+    get("/consulta/{codigo?}"){
         var codigo = call.parameters["codigo"]
         if(codigo != null){
             for (i in 0 until sistema.listConsulta.size) {
@@ -268,20 +271,22 @@ fun Route.procurarFuncionario() {
 }
 
     //deletar todas as consultas
+
 fun Route.deletarConsultas() {
     delete("/consultas") {
-        call.respond(sistema.listConsulta)
+        sistema.listConsulta.clear()
     }
 }
 
 //deletar consulta por id (codigo)
+
 fun Route.deletarConsultaId(){
-    delete("/Consulta/{codigo?}"){
+    delete("/consulta/{codigo?}"){
         var codigo = call.parameters["codigo"]
         if(codigo != null){
             for (i in 0 until sistema.listConsulta.size) {
-                if (sistema.listConsulta[i].codigo == codigo) {
-                    call.respond(sistema.listConsulta[i])
+                if (sistema.listConsulta[i].codigo == codigo){
+                    sistema.listConsulta.remove(sistema.listConsulta[i])
                 }
             }
         } else {
@@ -291,20 +296,22 @@ fun Route.deletarConsultaId(){
 }
 
 //deletar todos os medicos
+
 fun Route.deletarMedicos() {
     delete("/medicos") {
-        call.respond(sistema.listMedico)
+        sistema.listMedico.clear()
     }
 }
 
 //deletar medicos por id (crm)
+
 fun Route.deletarMedicoId(){
     delete ("/medicos/{crm?}"){
         var crm = call.parameters["crm"]
         if(crm != null) {
             for (i in 0 until sistema.listMedico.size) {
                 if (sistema.listMedico[i].crm.toString() == crm) {
-                    call.respond(sistema.listMedico[i])
+                    sistema.listMedico.remove(sistema.listMedico[i])
                 }
             }
         }else{
@@ -314,20 +321,22 @@ fun Route.deletarMedicoId(){
 }
 
 //deletar todos os pacientes
+
 fun Route.deletarPacientes(){
     delete("/pacientes") {
-        call.respond(sistema.listPaciente)
+        sistema.listPaciente.clear()
     }
 }
 
 //deletar pacientes por id (numCartaoConsulta)
+
 fun Route.deletarPacienteId(){
     delete("/paciente/{numCartaoConsulta?}"){
         var numCartaoConsulta = call.parameters["numCartaoConsulta"]
         if(numCartaoConsulta != null){
             for (i in 0 until sistema.listPaciente.size) {
                 if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
-                    call.respond(sistema.listPaciente[i])
+                    sistema.listPaciente.remove(sistema.listPaciente[i])
                 }
             }
         }else{
@@ -337,9 +346,10 @@ fun Route.deletarPacienteId(){
 }
 
 //deletar todos os funcionarios
+
 fun Route.deletarFuncionarios(){
-    delete("/funcionarios") {
-        call.respond(sistema.listFuncionario)
+    delete("/deletarfuncionarios") {
+        sistema.listFuncionario.clear()
     }
 }
 
@@ -350,7 +360,7 @@ fun Route.deletarFuncioanrioId(){
         if(matricula != null){
             for (i in 0 until sistema.listFuncionario.size) {
                 if(sistema.listFuncionario[i].matricula == matricula){
-                    call.respond(sistema.listFuncionario[i])
+                    sistema.listFuncionario.remove(sistema.listFuncionario[i])
                 }
             }
         }else{
@@ -367,7 +377,8 @@ fun Route.updatePaciente(){
         if(cpf != null){
             for (i in 0 until sistema.listPaciente.size) {
                 if(sistema.listPaciente[i].cpf == cpf){
-                    val pacienteAtualizado = sistema.updatePaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
+                    sistema.listPaciente.remove(sistema.listPaciente[i])
+                    val pacienteAtualizado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
                     call.respond(pacienteAtualizado)
                 }
             }
@@ -383,9 +394,10 @@ fun Route.updateMedico(){
         var crm = call.parameters["crm"]
         val dadosCadastroMedico = call.receive<Medico>()
         if(crm != null){
-            for (i in 0 until sistema.listMedico.size) {
+            for (i in 0 until sistema.listPaciente.size) {
                 if (sistema.listMedico[i].crm.toString() == crm) {
-                    val medicoAtualizado = sistema.updateMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
+                    sistema.listMedico.remove(sistema.listMedico[i])
+                    val medicoAtualizado = sistema.cadastroMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
                     call.respond(medicoAtualizado)
                 }
             }
@@ -403,7 +415,8 @@ fun Route.updateFuncionario(){
         if(matricula != null){
             for (i in 0 until sistema.listFuncionario.size) {
                 if(sistema.listFuncionario[i].matricula == matricula){
-                    val funcionarioAtualizado = sistema.updateFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
+                    sistema.listFuncionario.remove(sistema.listFuncionario[i])
+                    val funcionarioAtualizado = sistema.cadastroFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
                     call.respond(funcionarioAtualizado)
                 }
             }

@@ -71,46 +71,4 @@ class Sistema {
         return funcionario
     }
 
-
-
-    fun updatePaciente(nomePaciente: String, idadePaciente: Int, cpfPaciente: String, telefonePaciente: String, numCartaoConsultaPaciente: String): Paciente {
-        var paciente: Paciente = Paciente()
-
-        paciente.numCartaoConsulta = numCartaoConsultaPaciente
-
-        paciente.nome = nomePaciente
-        paciente.idade = idadePaciente
-        paciente.cpf = cpfPaciente
-        paciente.telefone = telefonePaciente
-
-        return paciente
-    }
-
-    fun updateMedico(nomeMedico:String, idadeMedico: Int, cpfMedico: String, telefonePaciente: String, numCrm: Int, especialização: String): Medico {
-        var medico: Medico = Medico()
-
-        medico.nome = nomeMedico
-        medico.idade = idadeMedico
-        medico.cpf = cpfMedico
-        medico.telefone = telefonePaciente
-
-        medico.crm = numCrm
-        medico.especializacao = especialização
-
-        return medico
-    }
-
-
-   fun updateFuncionario(nomeFuncionario: String, idadeFuncionario: Int, cpfFuncionario: String, telefoneFuncionario: String, matriculaFuncionario: String): Funcionario {
-       var funcionario: Funcionario = Funcionario()
-
-       funcionario.nome = nomeFuncionario
-       funcionario.idade = idadeFuncionario
-       funcionario.cpf = cpfFuncionario
-       funcionario.telefone = telefoneFuncionario
-       funcionario.matricula = matriculaFuncionario
-
-       return funcionario
-   }
-
 }
