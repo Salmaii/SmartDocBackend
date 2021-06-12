@@ -1,5 +1,3 @@
 To Do:
 - Cadastro de local: server e sistema
 - Criar lista de local no sistema
-- Cadastro de funcionario: server e sistema
-- Requisicao get: Listagem de -> Consultas, Medicos, Pacientes, Locais.
