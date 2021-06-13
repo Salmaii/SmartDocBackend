@@ -2,6 +2,7 @@ package servidor
 
 import Consulta
 import Sistema
+import customer.Profile
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -15,7 +16,6 @@ import org.slf4j.event.Level
 import pessoa.funcionario.Funcionario
 import pessoa.medico.Medico
 import pessoa.paciente.Paciente
-import customer.Profile
 import site.SiteSmartDoc
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -142,6 +142,9 @@ fun Route.meuindex() {
 //Login
 
 fun Route.profile() {
+
+    val site:SiteSmartDoc = SiteSmartDoc()
+
     get("/profile") {
         val user = site.currentProfile
         if (user == null) {
@@ -167,7 +170,6 @@ fun Route.profile() {
             call.respond(HttpStatusCode.BadRequest, error)
             return@post
         }
-
         site.createProfile(customer.name, customer.email)
         call.respond(HttpStatusCode.Created)
     }
@@ -270,7 +272,7 @@ fun Route.criarConsulta() {
 }
 
 
-//Listar todos os Pacientes
+//Listar todos
 
 fun Route.listarPacientes() {
     get("/pacientes") {
@@ -278,7 +280,26 @@ fun Route.listarPacientes() {
     }
 }
 
-//Procurar por id(numCartaiConsulta)
+fun Route.listarMedicos(){
+    get("/medicos"){
+        call.respond(sistema.listMedico)
+    }
+}
+
+fun Route.listarConsultas() {
+
+    get("/consultas") {
+        call.respond(sistema.listConsulta)
+    }
+}
+
+fun Route.listarFuncionarios() {
+    get("/funcionarios") {
+        call.respond(sistema.listFuncionario)
+    }
+}
+
+//Procurar por id
 
 fun Route.procurarPaciente(){
     get("/paciente/{numCartaoConsulta}"){
@@ -295,16 +316,6 @@ fun Route.procurarPaciente(){
     }
 }
 
-//Listar todos os Medicos
-
-fun Route.listarMedicos(){
-    get("/medicos"){
-        call.respond(sistema.listMedico)
-    }
-}
-
-//Procurar por id(crm)
-
 fun Route.procurarMedico(){
     get("/medicos/{crm?}"){
         var crm = call.parameters["crm"]
@@ -320,17 +331,6 @@ fun Route.procurarMedico(){
     }
 }
 
-//Listar todas as Consultas
-
-fun Route.listarConsultas() {
-
-    get("/consultas") {
-        call.respond(sistema.listConsulta)
-    }
-}
-
-//Procurar por id(codigo)
-
 fun Route.procurarConsulta(){
     get("/consulta/{codigo?}"){
         var codigo = call.parameters["codigo"]
@@ -345,16 +345,6 @@ fun Route.procurarConsulta(){
         }
     }
 }
-
-//Listar todos os Funcionarios
-
-fun Route.listarFuncionarios() {
-    get("/funcionarios") {
-        call.respond(sistema.listFuncionario)
-    }
-}
-
-//Procurar por id(matricula)
 
 fun Route.procurarFuncionario() {
     get("/funcionario/{matricula?}"){
@@ -372,7 +362,7 @@ fun Route.procurarFuncionario() {
 }
 
 
-//deletar todas as consultas
+//deletar todos
 
 fun Route.deletarConsultas() {
     delete("/consultas") {
@@ -380,7 +370,25 @@ fun Route.deletarConsultas() {
     }
 }
 
-//deletar consulta por id (codigo)
+fun Route.deletarMedicos() {
+    delete("/medicos") {
+        sistema.listMedico.clear()
+    }
+}
+
+fun Route.deletarPacientes(){
+    delete("/pacientes") {
+        sistema.listPaciente.clear()
+    }
+}
+
+fun Route.deletarFuncionarios(){
+    delete("/funcionarios") {
+        sistema.listFuncionario.clear()
+    }
+}
+
+//deletar por id
 
 fun Route.deletarConsultaId(){
     delete("/consulta/{codigo?}"){
@@ -397,16 +405,6 @@ fun Route.deletarConsultaId(){
     }
 }
 
-//deletar todos os medicos
-
-fun Route.deletarMedicos() {
-    delete("/medicos") {
-        sistema.listMedico.clear()
-    }
-}
-
-//deletar medicos por id (crm)
-
 fun Route.deletarMedicoId(){
     delete ("/medicos/{crm?}"){
         var crm = call.parameters["crm"]
@@ -421,16 +419,6 @@ fun Route.deletarMedicoId(){
         }
     }
 }
-
-//deletar todos os pacientes
-
-fun Route.deletarPacientes(){
-    delete("/pacientes") {
-        sistema.listPaciente.clear()
-    }
-}
-
-//deletar pacientes por id (numCartaoConsulta)
 
 fun Route.deletarPacienteId(){
     delete("/paciente/{numCartaoConsulta?}"){
@@ -447,15 +435,6 @@ fun Route.deletarPacienteId(){
     }
 }
 
-//deletar todos os funcionarios
-
-fun Route.deletarFuncionarios(){
-    delete("/funcionarios") {
-        sistema.listFuncionario.clear()
-    }
-}
-
-//deletar funcionarios por id (matricula)
 fun Route.deletarFuncioanrioId(){
     delete("/funcionario/{matricula?}"){
         var matricula = call.parameters["matricula"]
@@ -472,7 +451,8 @@ fun Route.deletarFuncioanrioId(){
 }
 
 
-//Update Completo Paciente
+//Update Completo
+
 fun Route.updatePaciente(){
     put("/paciente/{cpf?}"){
         var cpf = call.parameters["cpf"]
@@ -491,7 +471,6 @@ fun Route.updatePaciente(){
     }
 }
 
-//Update Completo Paciente
 fun Route.updateMedico(){
     put("/medico/{crm?}"){
         var crm = call.parameters["crm"]
@@ -510,7 +489,6 @@ fun Route.updateMedico(){
     }
 }
 
-//Update Completo Paciente
 fun Route.updateFuncionario(){
     put("/funcionario/{matricula?}"){
         var matricula = call.parameters["matricula"]
