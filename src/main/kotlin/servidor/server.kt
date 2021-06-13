@@ -57,7 +57,7 @@ fun Application.sistema(testing: Boolean = false) {
 
         //Cadastro
 
-        criarConsulta()
+        cadastroConsulta()
         cadastroPaciente()
         cadastroMedico()
         cadastroFuncionario()
@@ -113,9 +113,10 @@ fun Route.meuindex() {
                     ol { +"POST - /cadastro/paciente            - Cadastro de paciente" }
                     ol { +"POST - /cadastro/medico              - Cadastro de medico" }
                     ol { +"POST - /cadastro/funcionario         - Cadastro de funcionario"}
-                    ol { +"POST - /consulta                     - Cria consulta" }
+                    ol { +"POST - /cadastro/consulta            - Cadastro de consulta" }
                     ol { +"GET  - /pacientes                    - Listar todos os pacientes"}
                     ol { +"GET  - /paciente/{numCartaoConsulta} - Procurar por id{numCartaoConsulta}"}
+                    ol { +"GET  - /medicos                      - Listar todos os medicos"}
                     ol { +"GET  - /medicos/{crm?}               - Procurar por id{crm}"}
                     ol { +"GET  - /consultas                    - Listar todas as consultas"}
                     ol { +"GET  - /consulta/{codigo?}           - Procurar por id{codigo?}"}
@@ -129,15 +130,15 @@ fun Route.meuindex() {
                     ol { +"DELETE - /paciente/{numCartaoConsulta?} - Deletar pacientes por id{numCartaoConsulta}"}
                     ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
                     ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
-                    ol { +"UPDATE - /paciente/{cpf?}            - Update completo de pacientes por id{cpf}"}
-                    ol { +"UPDATE - /medico/{crm?}              - Update completo de medicos por id{crm}"}
-                    ol { +"UPDATE - /funcionario/{matricula?}   - Update completo de funcionarios por id{matricula}"}
+                    ol { +"UPDATE - /consulta/{codigo?}            - Update de consultas por id{codigo}"}
+                    ol { +"UPDATE - /paciente/{cpf?}            - Update de pacientes por id{cpf}"}
+                    ol { +"UPDATE - /medico/{crm?}              - Update de medicos por id{crm}"}
+                    ol { +"UPDATE - /funcionario/{matricula?}   - Update de funcionarios por id{matricula}"}
                 }
             }
         }
     }
 }
-
 
 //Login
 
@@ -231,7 +232,6 @@ fun Route.profile() {
      */
 }
 
-
 //Cadastros
 
 fun Route.cadastroPaciente() {
@@ -260,13 +260,11 @@ fun Route.cadastroFuncionario() {
     }
 }
 
-
-//criando consulta
-
-fun Route.criarConsulta() {
-    post("/consulta"){
+fun Route.cadastroConsulta() {
+    post("/cadastro/consulta"){
         val dadosConsulta = call.receive<Consulta>()
-        val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!, dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
+        val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!,
+            dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
         call.respond(consultaCriada)
     }
 }
@@ -451,7 +449,28 @@ fun Route.deletarFuncioanrioId(){
 }
 
 
-//Update Completo
+//Update
+
+fun Route.updateConsulta(){
+
+    put("/consulta/{codigo?}"){
+        var codigo = call.parameters["codigo"]
+        val dadosCriacaoConsulta = call.receive<Consulta>()
+        if(codigo != null){
+            for (i in 0 until sistema.listConsulta.size) {
+                if(sistema.listConsulta[i].codigo == codigo){
+                    sistema.listConsulta.remove(sistema.listConsulta[i])
+                    val consultaAtualizada = sistema.Marcar(dadosCriacaoConsulta.paciente!!,
+                        dadosCriacaoConsulta.medico!!, dadosCriacaoConsulta.local!!, dadosCriacaoConsulta.data!!,
+                        dadosCriacaoConsulta.hora!! , dadosCriacaoConsulta.motivo!!)
+                    call.respond(consultaAtualizada)
+                }
+            }
+        }else{
+            call.respondText {"codigo invalido"}
+        }
+    }
+}
 
 fun Route.updatePaciente(){
     put("/paciente/{cpf?}"){
