@@ -2,7 +2,6 @@ package servidor
 
 import Consulta
 import Sistema
-import customer.Profile
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -13,10 +12,10 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 import org.slf4j.event.Level
-import pessoa.funcionario.Funcionario
-import pessoa.medico.Medico
-import pessoa.paciente.Paciente
-import site.SiteSmartDoc
+import perfil.Perfil
+import perfil.funcionario.Funcionario
+import perfil.medico.Medico
+import perfil.paciente.Paciente
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -58,9 +57,6 @@ fun Application.sistema(testing: Boolean = false) {
         //Cadastro
 
         cadastroConsulta()
-        cadastroPaciente()
-        cadastroMedico()
-        cadastroFuncionario()
 
         //Listagem
 
@@ -93,9 +89,13 @@ fun Application.sistema(testing: Boolean = false) {
         updateMedico()
         updateFuncionario()
 
-        //Login
-        profile()
+        //Confere login e mostra rotas
+        perfil()
 
+        //Logins e cadastros especificos
+        perfilFuncionario()
+        perfilMedico()
+        perfilPaciente()
 
     }
 }
@@ -110,30 +110,30 @@ fun Route.meuindex() {
                 h1 { +"SmartDoc"}
                 p { +"Tente chamar os outros endpoints para executar operações" }
                 ul {
-                    ol { +"POST - /cadastro/paciente            - Cadastro de paciente" }
-                    ol { +"POST - /cadastro/medico              - Cadastro de medico" }
-                    ol { +"POST - /cadastro/funcionario         - Cadastro de funcionario"}
-                    ol { +"POST - /cadastro/consulta            - Cadastro de consulta" }
-                    ol { +"GET  - /pacientes                    - Listar todos os pacientes"}
-                    ol { +"GET  - /paciente/{numCartaoConsulta} - Procurar por id{numCartaoConsulta}"}
-                    ol { +"GET  - /medicos                      - Listar todos os medicos"}
-                    ol { +"GET  - /medicos/{crm?}               - Procurar por id{crm}"}
-                    ol { +"GET  - /consultas                    - Listar todas as consultas"}
-                    ol { +"GET  - /consulta/{codigo?}           - Procurar por id{codigo?}"}
-                    ol { +"GET  - /funcionarios                 - Listar todos os funcionarios"}
-                    ol { +"GET  - /funcionario/{matricula?}     - Procurar por id{matricula}"}
-                    ol { +"DELETE - /consultas                  - Deletar todas as consultas"}
-                    ol { +"DELETE - /consulta/{codigo?}          - Deletar consulta por id{codigo}"}
-                    ol { +"DELETE - /medicos                    - Deletar todos os medicos"}
-                    ol { +"DELETE - /medicos/{crm?}             - Deletar medicos por id{}crm"}
-                    ol { +"DELETE - /pacientes                  - Deletar todos os pacientes"}
+                    ol { +"POST - /cadastro/paciente               - Cadastro de paciente" }
+                    ol { +"POST - /cadastro/medico                 - Cadastro de medico" }
+                    ol { +"POST - /cadastro/funcionario            - Cadastro de funcionario"}
+                    ol { +"POST - /cadastro/consulta               - Cadastro de consulta" }
+                    ol { +"GET  - /pacientes                       - Listar todos os pacientes"}
+                    ol { +"GET  - /paciente/{numCartaoConsulta}    - Procurar por id{numCartaoConsulta}"}
+                    ol { +"GET  - /medicos                         - Listar todos os medicos"}
+                    ol { +"GET  - /medicos/{crm?}                  - Procurar por id{crm}"}
+                    ol { +"GET  - /consultas                       - Listar todas as consultas"}
+                    ol { +"GET  - /consulta/{codigo?}              - Procurar por id{codigo?}"}
+                    ol { +"GET  - /funcionarios                    - Listar todos os funcionarios"}
+                    ol { +"GET  - /funcionario/{matricula?}        - Procurar por id{matricula}"}
+                    ol { +"DELETE - /consultas                     - Deletar todas as consultas"}
+                    ol { +"DELETE - /consulta/{codigo?}            - Deletar consulta por id{codigo}"}
+                    ol { +"DELETE - /medicos                       - Deletar todos os medicos"}
+                    ol { +"DELETE - /medicos/{crm?}                - Deletar medicos por id{}crm"}
+                    ol { +"DELETE - /pacientes                     - Deletar todos os pacientes"}
                     ol { +"DELETE - /paciente/{numCartaoConsulta?} - Deletar pacientes por id{numCartaoConsulta}"}
-                    ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
-                    ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
+                    ol { +"DELETE - /funcionarios                  - Deletar todos os funcionarios"}
+                    ol { +"DELETE - /funcionario/{matricula?}      - Deletar funcionarios por id{matricula}"}
                     ol { +"UPDATE - /consulta/{codigo?}            - Update de consultas por id{codigo}"}
-                    ol { +"UPDATE - /paciente/{cpf?}            - Update de pacientes por id{cpf}"}
-                    ol { +"UPDATE - /medico/{crm?}              - Update de medicos por id{crm}"}
-                    ol { +"UPDATE - /funcionario/{matricula?}   - Update de funcionarios por id{matricula}"}
+                    ol { +"UPDATE - /paciente/{numCartaoConsulta?} - Update de pacientes por id{numeroCartaoConsulta}"}
+                    ol { +"UPDATE - /medico/{crm?}                 - Update de medicos por id{crm}"}
+                    ol { +"UPDATE - /funcionario/{matricula?}      - Update de funcionarios por id{matricula}"}
                 }
             }
         }
@@ -142,51 +142,88 @@ fun Route.meuindex() {
 
 //Login
 
-fun Route.profile() {
+fun Route.perfil() {
 
-    val site:SiteSmartDoc = SiteSmartDoc()
-
-    get("/profile") {
-        val user = site.currentProfile
-        if (user == null) {
-            val error = ServerError(HttpStatusCode.NotFound.value, "Usuário não encontrado. Efetue login para continuar com suas compras!")
+    //Verifica se tem perfil logado
+    get("/perfil") {
+        val usuario = sistema.currentProfile
+        if (usuario == null) {
+            val error = ServerError(
+                HttpStatusCode.NotFound.value, "Usuário não encontrado. Efetue login para " +
+                        "continuar!"
+            )
             call.respond(HttpStatusCode.NotFound, error)
         } else {
-            call.respond(HttpStatusCode.OK, user)
+            call.respond(HttpStatusCode.OK, usuario)
         }
     }
 
-    post("/profile") {
-        val customer = call.receive<Profile>()
+    //Rota de cadastros gerais
 
-        // Verifica se o e-mail foi envidado na requisição
-        if (customer.email == null) {
-            val error = ServerError(HttpStatusCode.BadRequest.value, "O E-MAIL é obrigatório para o cadastro!")
-            call.respond(HttpStatusCode.BadRequest, error)
-            return@post
+    post("/perfil/cadastro") {
+        val tipo: String = call.receive()
+        if (tipo == "Paciente") {
+            call.respondText("Vá para a rota /cadastro/paciente")
         }
+        if (tipo == "Medidco") {
+            call.respondText("Vá para a rota /cadastro/medico")
+        }
+        if (tipo == "Funcionario") {
+            call.respondText("Vá para a rota /cadastro/funcionario")
+        }
+    }
 
-        if (customer.name == null) {
-            val error = ServerError(HttpStatusCode.BadRequest.value, "O NOME é obrigatório para o cadastro!")
-            call.respond(HttpStatusCode.BadRequest, error)
-            return@post
+    //Rota de login geral
+
+    post("/perfil/login") {
+        val tipo: String = call.receive()
+        if (tipo == "Paciente") {
+            call.respondText("Vá para a rota /login/paciente")
         }
-        site.createProfile(customer.name, customer.email)
+        if (tipo == "Medidco") {
+            call.respondText("Vá para a rota /login/medico")
+        }
+        if (tipo == "Funcionario") {
+            call.respondText("Vá para a rota /login/funcionario")
+        }
+    }
+}
+
+//TODO testes, cada tipo de perfil com as suas rotas especificas
+
+fun Route.perfilFuncionario() {
+
+    post("/perfil/cadastro/funcionario") {
+
+        val dadosCadastroFuncionario = call.receive<Funcionario>()
+
+        val funcionarioCriado = sistema.cadastroFuncionario(
+            dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!,
+            dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!,
+            dadosCadastroFuncionario.email!!, dadosCadastroFuncionario.nomeUsuario!!
+        )
+
+        call.respond(funcionarioCriado)
+
         call.respond(HttpStatusCode.Created)
     }
 
-    post("/login") {
-        val customer = call.receive<Profile>()
+    post("/perfil/login/funcionario") {
+        val perfil = call.receive<Funcionario>()
         // Verifica se o e-mail foi envidado na requisição
-        if (customer.email == null) {
+        if (perfil.email == null) {
             val error = ServerError(HttpStatusCode.BadRequest.value, "O E-MAIL é obrigatório efetuar login!")
             call.respond(HttpStatusCode.BadRequest, error)
             return@post
         }
 
-        val result = site.login(customer.email)
+        val result = sistema.login(perfil.email!!)
+
         if (!result) {
-            val error = ServerError(HttpStatusCode.BadRequest.value, "Não foi possível efetuar login. Por favor verifique os dados.")
+            val error = ServerError(
+                HttpStatusCode.BadRequest.value, "Não foi possível efetuar login." +
+                        " Por favor verifique os dados."
+            )
             call.respond(HttpStatusCode.BadRequest, error)
             return@post
         }
@@ -194,77 +231,189 @@ fun Route.profile() {
         call.respond(HttpStatusCode.NoContent)
     }
 
+    /**TODO Funções de deletar
+     * TODO Funções de Atualizar parcialmente(sem o id)
+     * TODO Funções de cadastro de consulta
+     * TODO Alteraçoes na classe Consulta, retirar as instancias e colocar só os ids
+     */
 
-    /*
-    // http://localhost:8888/profile/81c4ae49-e0e3-483a-a1ae-540e3e412fdd/address/HOME
-    post("/profile/{id}/address/{type}") {
-        val userId = call.parameters["id"]
-        val type = call.parameters["type"]
-        val address = call.receive<Address>()
+    /*post("/perfil/{id}/cadastro/consulta") {
+        val dadosConsulta = call.receive<Consulta>()
+        val consultaCriada = sistema.Marcar(
+            dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!,
+            dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!, dadosConsulta.funcionario!!
+        )
+        call.respond(consultaCriada)
+    }
+    */
 
-        val user = site.currentProfile
-        if (user == null) {
-            val error = ServerError(HttpStatusCode.NotFound.value, "Usuário não encontrado. Efetue login para continuar com suas compras!")
-            call.respond(HttpStatusCode.NotFound, error)
-            return@post
-        }
+    //todas as paradas de funcionarios
+}
 
-        if (userId == null) {
-            val error = ServerError(HttpStatusCode.BadRequest.value, "O ID do Usuário é obrigatório!")
-            call.respond(HttpStatusCode.BadRequest, error)
-            return@post
-        }
+fun Route.perfilMedico() {
 
-        if (type == null) {
-            val error = ServerError(HttpStatusCode.BadRequest.value, "O tipo do endereço é obrigatório!")
-            call.respond(HttpStatusCode.BadRequest, error)
-            return@post
-        }
+    post("/perfil/cadastro/medico") {
 
-        // TODO: Verificar todos os campos obrigatórios do endereço
-        address.type = AddressType.valueOf(type)
+        val dadosCadastroMedico = call.receive<Medico>()
 
-        site.addOrUpdateAddress(address)
+        val medicoCadastrado = sistema.cadastroMedico(
+            dadosCadastroMedico.nome!!,
+            dadosCadastroMedico.idade!!,
+            dadosCadastroMedico.cpf!!,
+            dadosCadastroMedico.telefone!!,
+            dadosCadastroMedico.crm!!,
+            dadosCadastroMedico.especializacao!!,
+            dadosCadastroMedico.email!!,
+            dadosCadastroMedico.nomeUsuario!!
+        )
 
-        call.respond(HttpStatusCode.Accepted)
+        call.respond(medicoCadastrado)
+
+        call.respond(HttpStatusCode.Created)
     }
 
+    post("/perfil/login/medico") {
+        val perfil = call.receive<Medico>()
+        // Verifica se o e-mail foi envidado na requisição
+        if (perfil.email == null) {
+            val error = ServerError(HttpStatusCode.BadRequest.value, "O E-MAIL é obrigatório efetuar login!")
+            call.respond(HttpStatusCode.BadRequest, error)
+            return@post
+        }
+
+        val result = sistema.login(perfil.email!!)
+
+        if (!result) {
+            val error = ServerError(
+                HttpStatusCode.BadRequest.value, "Não foi possível efetuar login." +
+                        " Por favor verifique os dados."
+            )
+            call.respond(HttpStatusCode.BadRequest, error)
+            return@post
+        }
+
+        call.respond(HttpStatusCode.NoContent)
+    }
+
+    get("/perfil/medico/{crm}/consultas"){}
+
+    /**TODO Leitura dos dados do medico
+     * TODO Buscar consultas pelo id do medico, atualização parcial(nome, telefone)
      */
+
+    //todas as paradas de paciente
+}
+
+fun Route.perfilPaciente() {
+
+    post("/perfil/cadastro/paciente") {
+
+        val dadosCadastroPaciente = call.receive<Paciente>()
+
+        val pacienteCadastrado = sistema.cadastroPaciente(
+            dadosCadastroPaciente.nome!!,
+            dadosCadastroPaciente.idade!!,
+            dadosCadastroPaciente.cpf!!,
+            dadosCadastroPaciente.telefone!!,
+            dadosCadastroPaciente.numCartaoConsulta!!,
+            dadosCadastroPaciente.email!!,
+            dadosCadastroPaciente.nomeUsuario!!
+        )
+
+        call.respond(pacienteCadastrado)
+
+        call.respond(HttpStatusCode.Created)
+    }
+
+    post("/perfil/login/paciente") {
+        val perfil = call.receive<Paciente>()
+        // Verifica se o e-mail foi envidado na requisição
+        if (perfil.email == null) {
+            val error = ServerError(HttpStatusCode.BadRequest.value, "O E-MAIL é obrigatório efetuar login!")
+            call.respond(HttpStatusCode.BadRequest, error)
+            return@post
+        }
+
+        val result = sistema.login(perfil.email!!)
+
+        if (!result) {
+            val error = ServerError(
+                HttpStatusCode.BadRequest.value, "Não foi possível efetuar login." +
+                        " Por favor verifique os dados."
+            )
+            call.respond(HttpStatusCode.BadRequest, error)
+            return@post
+        }
+
+        call.respond(HttpStatusCode.NoContent)
+    }
+
+    /**TODO Atualizar parcialmente(nome e telefone)
+     * TODO Buscar consulta pelo id do paciente
+     */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+// http://localhost:8888/profile/81c4ae49-e0e3-483a-a1ae-540e3e412fdd/address/HOME
+post("/profile/{id}/address/{type}") {
+    val userId = call.parameters["id"]
+    val type = call.parameters["type"]
+    val address = call.receive<Address>()
+
+    val user = site.currentProfile
+    if (user == null) {
+        val error = ServerError(HttpStatusCode.NotFound.value, "Usuário não encontrado. Efetue login para continuar com suas compras!")
+        call.respond(HttpStatusCode.NotFound, error)
+        return@post
+    }
+
+    if (userId == null) {
+        val error = ServerError(HttpStatusCode.BadRequest.value, "O ID do Usuário é obrigatório!")
+        call.respond(HttpStatusCode.BadRequest, error)
+        return@post
+    }
+
+    if (type == null) {
+        val error = ServerError(HttpStatusCode.BadRequest.value, "O tipo do endereço é obrigatório!")
+        call.respond(HttpStatusCode.BadRequest, error)
+        return@post
+    }
+    address.type = AddressType.valueOf(type)
+
+    site.addOrUpdateAddress(address)
+
+    call.respond(HttpStatusCode.Accepted)
+}
+
+ */
 }
 
 //Cadastros
 
-fun Route.cadastroPaciente() {
-    post("/cadastro/paciente"){
-        val dadosCadastroPaciente = call.receive<Paciente>()
-        val pacienteCadastrado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
-        call.respond(pacienteCadastrado)
-
-    }
-}
-
-fun Route.cadastroMedico() {
-    post("/cadastro/medico"){
-        val dadosCadastroMedico = call.receive<Medico>()
-        val medicoCadastrado = sistema.cadastroMedico(dadosCadastroMedico.nome!!, dadosCadastroMedico.idade!!,
-            dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!, dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!)
-        call.respond(medicoCadastrado)
-    }
-}
-
-fun Route.cadastroFuncionario() {
-    post("/cadastro/funcionario"){
-        val dadosCadastroFuncionario = call.receive<Funcionario>()
-        val funcionarioCriado = sistema.cadastroFuncionario(dadosCadastroFuncionario.nome!!, dadosCadastroFuncionario.idade!!, dadosCadastroFuncionario.cpf!!, dadosCadastroFuncionario.telefone!!, dadosCadastroFuncionario.matricula!!)
-        call.respond(funcionarioCriado)
-    }
-}
-
 fun Route.cadastroConsulta() {
     post("/cadastro/consulta"){
         val dadosConsulta = call.receive<Consulta>()
-        val consultaCriada = sistema.Marcar(dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!,
-            dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!)
+        val consultaCriada = sistema.Marcar(
+            dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!,
+            dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!
+        )
         call.respond(consultaCriada)
     }
 }
@@ -473,19 +622,19 @@ fun Route.updateConsulta(){
 }
 
 fun Route.updatePaciente(){
-    put("/paciente/{cpf?}"){
-        var cpf = call.parameters["cpf"]
+    put("/paciente/{numCartaoConsulta?}"){
+        var numCartaoConsulta = call.parameters["numCartaoConsulta"]
         val dadosCadastroPaciente = call.receive<Paciente>()
-        if(cpf != null){
+        if(numCartaoConsulta != null){
             for (i in 0 until sistema.listPaciente.size) {
-                if(sistema.listPaciente[i].cpf == cpf){
+                if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
                     sistema.listPaciente.remove(sistema.listPaciente[i])
                     val pacienteAtualizado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
                     call.respond(pacienteAtualizado)
                 }
             }
         }else{
-            call.respondText {"cpf invalido"}
+            call.respondText {"Número Do Cartão Consulta Inválido"}
         }
     }
 }

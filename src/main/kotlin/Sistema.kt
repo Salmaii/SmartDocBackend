@@ -1,6 +1,8 @@
-import pessoa.funcionario.Funcionario
-import pessoa.medico.Medico
-import pessoa.paciente.Paciente
+
+import perfil.Perfil
+import perfil.funcionario.Funcionario
+import perfil.medico.Medico
+import perfil.paciente.Paciente
 import kotlin.random.Random
 
 class Sistema {
@@ -10,7 +12,12 @@ class Sistema {
     var listPaciente = mutableListOf<Paciente>()
     val geradorRandom = Random(4350)
 
-    fun Marcar (paciente: Paciente, medico: Medico, local: Local, data: String, hora: String, motivo: String): Consulta {
+    var currentProfile: Perfil? = null
+        private set
+    private val profiles = mutableListOf<Perfil>()
+
+    fun Marcar (paciente: Paciente, medico: Medico, funcionario: Funcionario, local: Local, data: String,
+                hora: String, motivo: String): Consulta {
         val consulta: Consulta = Consulta()
         val numRandom = geradorRandom.nextInt()
 
@@ -22,12 +29,12 @@ class Sistema {
         consulta.hora = hora
         consulta.motivo = motivo
 
-
         listConsulta.add(consulta)
         return consulta
     }
 
-    fun cadastroPaciente(nomePaciente: String, idadePaciente: Int, cpfPaciente: String, telefonePaciente: String, numCartaoConsultaPaciente: String): Paciente {
+    fun cadastroPaciente(nomePaciente: String, idadePaciente: Int, cpfPaciente: String, telefonePaciente: String,
+                         numCartaoConsultaPaciente: String , emailPaciente:String,  nomeUsuarioPaciente : String): Paciente {
         var paciente: Paciente = Paciente()
 
         paciente.numCartaoConsulta = numCartaoConsultaPaciente
@@ -37,11 +44,17 @@ class Sistema {
         paciente.cpf = cpfPaciente
         paciente.telefone = telefonePaciente
 
+        paciente.email = emailPaciente
+        paciente.nomeUsuario = nomeUsuarioPaciente
+
         listPaciente.add(paciente)
         return paciente
     }
 
-    fun cadastroMedico(nomeMedico:String, idadeMedico: Int, cpfMedico: String, telefonePaciente: String, numCrm: Int, especialização: String): Medico {
+    fun cadastroMedico(
+        nomeMedico: String, idadeMedico: Int, cpfMedico: String, telefonePaciente: String, numCrm: Int,
+        especialização: String, emailMedico: String?, nomeUsuarioMedico: String
+    ): Medico {
         var medico: Medico = Medico()
 
         medico.nome = nomeMedico
@@ -52,12 +65,16 @@ class Sistema {
         medico.crm = numCrm
         medico.especializacao = especialização
 
+        medico.email = emailMedico
+        medico.nomeUsuario = nomeUsuarioMedico
+
         listMedico.add(medico)
 
         return medico
     }
 
-    fun cadastroFuncionario(nomeFuncionario: String, idadeFuncionario: Int, cpfFuncionario: String, telefoneFuncionario: String, matriculaFuncionario: String): Funcionario {
+    fun cadastroFuncionario(nomeFuncionario: String, idadeFuncionario: Int, cpfFuncionario: String,
+                            telefoneFuncionario: String, matriculaFuncionario: String, emailFuncionario: String, nomeUsuarioFuncionario   : String): Funcionario {
         var funcionario: Funcionario = Funcionario()
 
         funcionario.nome = nomeFuncionario
@@ -66,9 +83,16 @@ class Sistema {
         funcionario.telefone = telefoneFuncionario
         funcionario.matricula = matriculaFuncionario
 
+        funcionario.email = emailFuncionario
+        funcionario.nomeUsuario = nomeUsuarioFuncionario
+
         listFuncionario.add(funcionario)
 
         return funcionario
     }
 
+    fun login(email: String): Boolean {
+            currentProfile = profiles.firstOrNull { p -> p.email == email }
+            return currentProfile != null
+    }
 }
