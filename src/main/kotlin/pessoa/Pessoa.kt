@@ -7,6 +7,10 @@ open class Pessoa {
     open var cpf: String? = null
     open var telefone: String? = null
 
+    enum class permissoes{
+        PACIENTE, MEDICO, FUNCIONARIO
+    }
+
     constructor(idade: Int?, nome: String?, cpf: String?, telefone: String?) {
         this.idade = idade
         this.nome = nome
