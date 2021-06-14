@@ -1,5 +1,7 @@
-import pessoa.medico.Medico
-import pessoa.paciente.Paciente
+
+import perfil.funcionario.Funcionario
+import perfil.medico.Medico
+import perfil.paciente.Paciente
 
 class Consulta {
     var codigo: String? = null
@@ -9,5 +11,6 @@ class Consulta {
     var medico: Medico? = null
     var paciente: Paciente? = null
     var local: Local? = null
+    var funcionario: Funcionario? = null
 
 }
