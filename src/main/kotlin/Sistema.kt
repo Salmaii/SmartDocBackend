@@ -12,6 +12,10 @@ class Sistema {
     var listPaciente = mutableListOf<Paciente>()
     val geradorRandom = Random(4350)
 
+    var currentProfile: Perfil? = null
+        private set
+    private val profiles = mutableListOf<Perfil>()
+
     fun Marcar (paciente: Paciente, medico: Medico, funcionario: Funcionario, local: Local, data: String,
                 hora: String, motivo: String): Consulta {
         val consulta: Consulta = Consulta()
@@ -24,7 +28,6 @@ class Sistema {
         consulta.data = data
         consulta.hora = hora
         consulta.motivo = motivo
-
 
         listConsulta.add(consulta)
         return consulta
@@ -40,6 +43,9 @@ class Sistema {
         paciente.idade = idadePaciente
         paciente.cpf = cpfPaciente
         paciente.telefone = telefonePaciente
+
+        paciente.email = emailPaciente
+        paciente.nomeUsuario = nomeUsuarioPaciente
 
         listPaciente.add(paciente)
         return paciente
@@ -59,6 +65,9 @@ class Sistema {
         medico.crm = numCrm
         medico.especializacao = especialização
 
+        medico.email = emailMedico
+        medico.nomeUsuario = nomeUsuarioMedico
+
         listMedico.add(medico)
 
         return medico
@@ -73,6 +82,9 @@ class Sistema {
         funcionario.cpf = cpfFuncionario
         funcionario.telefone = telefoneFuncionario
         funcionario.matricula = matriculaFuncionario
+
+        funcionario.email = emailFuncionario
+        funcionario.nomeUsuario = nomeUsuarioFuncionario
 
         listFuncionario.add(funcionario)
 

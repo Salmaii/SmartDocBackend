@@ -2,7 +2,6 @@ package servidor
 
 import Consulta
 import Sistema
-import customer.Profile
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -90,9 +89,13 @@ fun Application.sistema(testing: Boolean = false) {
         updateMedico()
         updateFuncionario()
 
-        //Login
-        profile()
+        //Confere login e mostra rotas
+        perfil()
 
+        //Logins e cadastros especificos
+        perfilFuncionario()
+        perfilMedico()
+        perfilPaciente()
 
     }
 }
@@ -125,12 +128,12 @@ fun Route.meuindex() {
                     ol { +"DELETE - /medicos/{crm?}                - Deletar medicos por id{}crm"}
                     ol { +"DELETE - /pacientes                     - Deletar todos os pacientes"}
                     ol { +"DELETE - /paciente/{numCartaoConsulta?} - Deletar pacientes por id{numCartaoConsulta}"}
-                    ol { +"DELETE - /funcionarios               - Deletar todos os funcionarios"}
-                    ol { +"DELETE - /funcionario/{matricula?}   - Deletar funcionarios por id{matricula}"}
+                    ol { +"DELETE - /funcionarios                  - Deletar todos os funcionarios"}
+                    ol { +"DELETE - /funcionario/{matricula?}      - Deletar funcionarios por id{matricula}"}
                     ol { +"UPDATE - /consulta/{codigo?}            - Update de consultas por id{codigo}"}
-                    ol { +"UPDATE - /paciente/{cpf?}            - Update de pacientes por id{cpf}"}
-                    ol { +"UPDATE - /medico/{crm?}              - Update de medicos por id{crm}"}
-                    ol { +"UPDATE - /funcionario/{matricula?}   - Update de funcionarios por id{matricula}"}
+                    ol { +"UPDATE - /paciente/{numCartaoConsulta?} - Update de pacientes por id{numeroCartaoConsulta}"}
+                    ol { +"UPDATE - /medico/{crm?}                 - Update de medicos por id{crm}"}
+                    ol { +"UPDATE - /funcionario/{matricula?}      - Update de funcionarios por id{matricula}"}
                 }
             }
         }
@@ -151,7 +154,7 @@ fun Route.perfil() {
             )
             call.respond(HttpStatusCode.NotFound, error)
         } else {
-            call.respond(HttpStatusCode.OK, user)
+            call.respond(HttpStatusCode.OK, usuario)
         }
     }
 
@@ -619,19 +622,19 @@ fun Route.updateConsulta(){
 }
 
 fun Route.updatePaciente(){
-    put("/paciente/{cpf?}"){
-        var cpf = call.parameters["cpf"]
+    put("/paciente/{numCartaoConsulta?}"){
+        var numCartaoConsulta = call.parameters["numCartaoConsulta"]
         val dadosCadastroPaciente = call.receive<Paciente>()
-        if(cpf != null){
+        if(numCartaoConsulta != null){
             for (i in 0 until sistema.listPaciente.size) {
-                if(sistema.listPaciente[i].cpf == cpf){
+                if(sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta){
                     sistema.listPaciente.remove(sistema.listPaciente[i])
                     val pacienteAtualizado = sistema.cadastroPaciente(dadosCadastroPaciente.nome!!, dadosCadastroPaciente.idade!!, dadosCadastroPaciente.cpf!!, dadosCadastroPaciente.telefone!!, dadosCadastroPaciente.numCartaoConsulta!!)
                     call.respond(pacienteAtualizado)
                 }
             }
         }else{
-            call.respondText {"cpf invalido"}
+            call.respondText {"Número Do Cartão Consulta Inválido"}
         }
     }
 }
