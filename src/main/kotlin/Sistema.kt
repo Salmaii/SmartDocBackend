@@ -107,4 +107,24 @@ class Sistema {
         }
         return false
     }
+
+    fun validaMedico(idMedico: String) : Boolean {
+        var idPessoa = idMedico
+        for (i in 0 until sistema.listMedico.size) {
+            if (sistema.listMedico[i].id == idPessoa) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun validaPaciente(idPaciente: String) : Boolean {
+        var idPessoa = idPaciente
+        for (i in 0 until sistema.listPaciente.size) {
+            if (sistema.listPaciente[i].id == idPessoa) {
+                return true
+            }
+        }
+        return false
+    }
 }
