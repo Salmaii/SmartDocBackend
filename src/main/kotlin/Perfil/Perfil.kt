@@ -12,10 +12,6 @@ open class Perfil {
     open var email: String? = null
     open var nomeUsuario : String? = null
 
-    enum class permissoes{
-        PACIENTE, MEDICO, FUNCIONARIO
-    }
-
     constructor(idade: Int?, nome: String?, cpf: String?, telefone: String?) {
         this.idade = idade
         this.nome = nome

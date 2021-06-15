@@ -300,7 +300,7 @@ fun Route.perfilFuncionario() {
         sistema.listConsulta.clear()
     }
 
-    delete("/medicos") {
+    delete("/perfil/funcionario/{id?}/medicos") {
         sistema.listMedico.clear()
     }
 
@@ -339,7 +339,6 @@ fun Route.perfilFuncionario() {
             call.respondText { "Crm invalido" }
         }
     }
-
     delete("/paciente/{numCartaoConsulta?}"){
         var numCartaoConsulta = call.parameters["numCartaoConsulta"]
         if(numCartaoConsulta != null){

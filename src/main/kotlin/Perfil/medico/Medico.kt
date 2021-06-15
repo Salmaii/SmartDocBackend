@@ -5,5 +5,4 @@ import perfil.Perfil
 class Medico : Perfil() {
     var crm: Int? = null
     var especializacao: String? = null
-    val permissao = permissoes.MEDICO
 }
