@@ -97,4 +97,14 @@ class Sistema {
             currentProfile = profiles.firstOrNull { p -> p.email == email }
             return currentProfile != null
     }
+
+    fun validaFuncionario(idFuncionario: String): Boolean {
+        var idPessoa = idFuncionario
+        for (i in 0 until sistema.listFuncionario.size) {
+            if (sistema.listFuncionario[i].id == idPessoa) {
+                return true
+            }
+        }
+        return false
+    }
 }
