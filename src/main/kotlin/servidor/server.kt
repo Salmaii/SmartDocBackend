@@ -53,9 +53,8 @@ fun Application.sistema(testing: Boolean = false) {
     routing {
         meuindex()
 
-        //cadastroConsulta()
-
         //Confere login e mostra rotas
+
         perfil()
 
         //Perfis especificos
@@ -63,7 +62,6 @@ fun Application.sistema(testing: Boolean = false) {
         perfilFuncionario()
         perfilMedico()
         perfilPaciente()
-
     }
 }
 
@@ -107,18 +105,11 @@ fun Route.meuindex() {
     }
 }
 
-
-
 /**
  * TODO Testes
- * TODO Funções de cadastro de consulta (Funcionario)
  * TODO Colocar as rotas atualizadas no readme/meu index()
- * TODO Paciente função de validação, delete proprio, atualizar proprio, consultas proprias, perfil dados
- * TODO Medico função de validacao, delete proprio, atualizar proprio, consultas proprias, perfil dados
  * TODO Subir o Heroku
  */
-
-
 
 //Login
 
@@ -299,8 +290,6 @@ fun Route.perfilFuncionario() {
         }
     }
 
-
-
     //Buscar por id
 
     get("/perfil/funcionario/{id?}/funcionario/{matricula?}"){
@@ -447,16 +436,33 @@ fun Route.perfilFuncionario() {
         }
     }
 
-    /*
+
     post("/perfil/{id}/cadastro/consulta") {
-        val dadosConsulta = call.receive<Consulta>()
-        val consultaCriada = sistema.Marcar(
-            dadosConsulta.paciente!!, dadosConsulta.medico!!, dadosConsulta.local!!,
-            dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!, dadosConsulta.funcionario!!
+        val idPessoa = call.parameters["id"]
+        val validado = sistema.validaFuncionario(idPessoa.toString())
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
+                    "continuar!"
         )
-        call.respond(consultaCriada)
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
+        }else{
+            if(validado == true){
+                val dadosConsulta = call.receive<Consulta>()
+                val consultaCriada = sistema.Marcar(dadosConsulta.idPaciente!!,
+                    dadosConsulta.idMedico!!, dadosConsulta.idFuncionario!!, dadosConsulta.local!!,
+                    dadosConsulta.data!!, dadosConsulta.hora!!, dadosConsulta.motivo!!
+                )
+                call.respond(consultaCriada)
+            }else{
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro id para " +
+                            "continuar!"
+                )
+                call.respond(HttpStatusCode.Unauthorized, error)
+            }
+        }
     }
-    */
 
     //Deletar todos
 
@@ -829,46 +835,122 @@ fun Route.perfilMedico() {
 
     //Buscar consultas do medico
 
-    get("/perfil/medico/{crm}/consultas"){}
+    get("/perfil/medico/{id?}/consultas"){
+        val idPessoa = call.parameters["id"]
+        val validado = sistema.validaMedico(idPessoa.toString())
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
+                    "continuar!"
+        )
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
+        }else{
+            if(validado){
+                for (i in 0 until sistema.listConsulta.size) {
+                    if (sistema.listConsulta[i].idPaciente == idPessoa) {
+                        call.respond(sistema.listConsulta[i])
+                    }
+                }
+            }else{
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro id para " +
+                            "continuar!")
+                call.respond(HttpStatusCode.Unauthorized, error)
+            }
+        }
+    }
 
     //Buscar dados do medico
 
-    get("/perfil/medico/{crm}/dados"){
-        var crm = call.parameters["crm"]
-        if(crm != null) {
-            for (i in 0 until sistema.listMedico.size) {
-                if (sistema.listMedico[i].crm.toString() == crm) {
-                    call.respond(sistema.listMedico[i])
-                }
-            }
+    get("/perfil/medico/{id?}/dados"){
+        val idPessoa = call.parameters["id"]
+        val validado = sistema.validaMedico(idPessoa.toString())
+
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição ." +
+                    " Passe o parametro id para continuar!"
+        )
+
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
         }else{
-            call.respondText { "Crm invalido" }
+            if(validado){
+                    for (i in 0 until sistema.listMedico.size) {
+                        if (sistema.listMedico[i].crm.toString() == idPessoa) {
+                            call.respond(sistema.listMedico[i])
+                        }
+                    }
+            }else{
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . " +
+                            "Passe o parametro id para continuar!"
+                )
+                call.respond(HttpStatusCode.Unauthorized, error)
+            }
         }
     }
 
     //Atualização do medico
 
-    put("/medico/{crm?}"){
-        var crm = call.parameters["crm"]
+    put("/perfil/medico/{id?}/atualizar"){
         val dadosCadastroMedico = call.receive<Medico>()
-        if(crm != null){
-            for (i in 0 until sistema.listPaciente.size) {
-                if (sistema.listMedico[i].crm.toString() == crm) {
-                    sistema.listMedico.remove(sistema.listMedico[i])
-                    val medicoAtualizado = sistema.cadastroMedico(dadosCadastroMedico.nome!!,
-                        dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!,
-                        dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!, dadosCadastroMedico.email!!,
-                        dadosCadastroMedico.nomeUsuario!!)
-                    call.respond(medicoAtualizado)
-                }
-            }
+        val idPessoa = call.parameters["id"]
+        val validado = sistema.validaMedico(idPessoa.toString())
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
+                    "continuar!"
+        )
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
         }else{
-            call.respondText {"crm invalido"}
+            if(validado){
+                for (i in 0 until sistema.listMedico.size) {
+                    if (sistema.listMedico[i].id == idPessoa) {
+                        sistema.listMedico.remove(sistema.listMedico[i])
+                        val medicoAtualizado = sistema.cadastroMedico(dadosCadastroMedico.nome!!,
+                            dadosCadastroMedico.idade!!, dadosCadastroMedico.cpf!!, dadosCadastroMedico.telefone!!,
+                            dadosCadastroMedico.crm!!, dadosCadastroMedico.especializacao!!, dadosCadastroMedico.email!!,
+                            dadosCadastroMedico.nomeUsuario!!)
+                        call.respond(medicoAtualizado)
+                    }
+                }
+            }else{
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro id para " +
+                            "continuar!"
+                )
+                call.respond(HttpStatusCode.Unauthorized, error)
+            }
         }
     }
 
-    /**TODO Buscar consultas pelo id do medico, atualização parcial(nome, telefone)
-     */
+    //Delete Prorprio
+
+    delete ("/perfil/medico/{id?}/delete"){
+        val idPessoa = call.parameters["id"]
+        val validado = sistema.validaMedico(idPessoa.toString())
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
+                    "continuar!"
+        )
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
+        }else{
+            if(validado){
+                    for (i in 0 until sistema.listMedico.size) {
+                        if (sistema.listMedico[i].id == idPessoa) {
+                            sistema.listMedico.remove(sistema.listMedico[i])
+                        }
+                    }
+            }else{
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro id para " +
+                            "continuar!"
+                )
+                call.respond(HttpStatusCode.Unauthorized, error)
+            }
+        }
+    }
 }
 
 fun Route.perfilPaciente() {
@@ -1002,19 +1084,49 @@ fun Route.perfilPaciente() {
         if (idPessoa != null) {
             call.respond(HttpStatusCode.NotFound, error)
         } else {
-            if (validado == true) {
+            if (validado) {
                 for (i in 0 until sistema.listConsulta.size) {
                     if (sistema.listConsulta[i].idPaciente == idPessoa) {
                         call.respond(sistema.listConsulta[i])
-                    } else {
-                        error = ServerError(
-                            HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro correto para " +
-                                    "continuar!"
-                        )
-                        call.respond(HttpStatusCode.Unauthorized, error)
                     }
                 }
+            }else {
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro correto para " +
+                            "continuar!"
+                )
+                call.respond(HttpStatusCode.Unauthorized, error)
             }
         }
     }
+
+    //Delete prorpio
+
+    delete("/perfil/paciente/{id?}/delete"){
+        val idPessoa = call.parameters["id"]
+        val validado = sistema.validaPaciente(idPessoa.toString())
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
+                    "continuar!"
+        )
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
+        }else{
+            if(validado){
+                for (i in 0 until sistema.listPaciente.size) {
+                    if(sistema.listPaciente[i].id == idPessoa){
+                        sistema.listPaciente.remove(sistema.listPaciente[i])
+                    }
+                }
+            }else{
+                error = ServerError(
+                    HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro id para " +
+                            "continuar!"
+                )
+                call.respond(HttpStatusCode.Unauthorized, error)
+            }
+        }
+    }
+
+
 }
