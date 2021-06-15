@@ -3,6 +3,7 @@ import perfil.Perfil
 import perfil.funcionario.Funcionario
 import perfil.medico.Medico
 import perfil.paciente.Paciente
+import servidor.sistema
 import kotlin.random.Random
 
 class Sistema {
@@ -16,14 +17,15 @@ class Sistema {
         private set
     private val profiles = mutableListOf<Perfil>()
 
-    fun Marcar (paciente: Paciente, medico: Medico, funcionario: Funcionario, local: Local, data: String,
+    fun Marcar (idPaciente: String, idMedico: String, idFuncionario: String, local: Local, data: String,
                 hora: String, motivo: String): Consulta {
         val consulta: Consulta = Consulta()
         val numRandom = geradorRandom.nextInt()
 
         consulta.codigo = numRandom.toString()
-        consulta.medico = medico
-        consulta.paciente = paciente
+        consulta.idMedico = idMedico
+        consulta.idPaciente = idPaciente
+        consulta.idFuncionario = idFuncionario
         consulta.local = local
         consulta.data = data
         consulta.hora = hora
