@@ -11,6 +11,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 import org.slf4j.event.Level
+import perfil.Perfil
 import perfil.funcionario.Funcionario
 import perfil.medico.Medico
 import perfil.paciente.Paciente
@@ -296,9 +297,29 @@ fun Route.perfilFuncionario() {
 
     //Deletar todos
 
-    delete("/consultas") {
-        sistema.listConsulta.clear()
+    delete("/perfil/funcionario/{id?}/consultas") {
+        val idPessoa = call.parameters["id"]
+        var error = ServerError(
+            HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
+                    "continuar!"
+        )
+        if(idPessoa == null) {
+            call.respond(HttpStatusCode.NotFound, error)
+        }else{
+            for (i in 0 until sistema.listFuncionario.size) {
+                if (sistema.listFuncionario[i].id == idPessoa) {
+                    sistema.listConsulta.clear()
+                    break
+                }
+            }
+            error = ServerError(
+                HttpStatusCode.NotFound.value, "Id não corresponde a funcionário . Passe o parametro id correto para " +
+                        "continuar!"
+            )
+            call.respond(HttpStatusCode.Unauthorized, error)
+        }
     }
+
 
     delete("/perfil/funcionario/{id?}/medicos") {
         sistema.listMedico.clear()
