@@ -506,7 +506,7 @@ fun Route.perfilFuncionario() {
         if(idPessoa == null) {
             call.respond(HttpStatusCode.NotFound, error)
         }else{
-            if(validado == true && idPessoa == matricula){
+            if(validado == true){
                 if(matricula != null){
                     for (i in 0 until sistema.listFuncionario.size) {
                         if(sistema.listFuncionario[i].matricula == matricula){
@@ -1100,7 +1100,7 @@ fun Route.perfilPaciente() {
         if (idPessoa == null) {
             call.respond(HttpStatusCode.NotFound, error)
         } else {
-            if (validado == true && idPessoa == numCartaoConsulta) {
+            if (validado == true) {
                 if (numCartaoConsulta != null) {
                     for (i in 0 until sistema.listPaciente.size) {
                         if (sistema.listPaciente[i].numCartaoConsulta == numCartaoConsulta) {
