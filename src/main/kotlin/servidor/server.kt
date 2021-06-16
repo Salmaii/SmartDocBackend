@@ -173,18 +173,18 @@ fun Route.perfil() {
     get("/perfil/cadastro") {
         call.respondText(
             "Vá para a rota /cadastro/paciente" +
-                    "Vá para a rota /cadastro/medico" +
-                    "Vá para a rota /cadastro/funcionario"
+                    " Vá para a rota /cadastro/medico" +
+                    " Vá para a rota /cadastro/funcionario"
         )
     }
 
 
     //Rota de login geral
 
-    get("/perfil/cadastro"){
-        call.respondText("Vá para a rota /cadastro/paciente" +
-                "Vá para a rota /cadastro/medico" +
-                "Vá para a rota /cadastro/funcionario")
+    get("/perfil/login"){
+        call.respondText("Vá para a rota /login/paciente" +
+                " Vá para a rota /login/medico" +
+                " Vá para a rota /login/funcionario")
     }
 }
 
@@ -704,7 +704,7 @@ fun Route.perfilFuncionario() {
         }
     }
 
-    delete ("/perfil/funcionario/{id?}/medicos/{crm?}"){
+    delete ("/perfil/funcionario/{id?}/medico/{crm?}"){
         var crm = call.parameters["crm"]
         val idPessoa = call.parameters["id"]
         val validado = sistema.validaFuncionario(idPessoa.toString())
