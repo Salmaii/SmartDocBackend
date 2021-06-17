@@ -18,7 +18,7 @@ class Sistema {
     private val profiles = mutableListOf<Perfil>()
 
     fun Marcar (
-        idPaciente: String, idMedico: String, idFuncionario: String, local: Local, data: String,
+        idPaciente: String, idMedico: String, idFuncionario: String, local: String, data: String,
         hora: String, motivo: String): Consulta {
         val consulta: Consulta = Consulta()
         val numRandom = geradorRandom.nextInt()

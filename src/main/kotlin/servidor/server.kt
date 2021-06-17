@@ -145,13 +145,6 @@ fun Route.meuindex() {
     }
 }
 
-/**
- * TODO Testes
- * TODO Subir o Heroku
- */
-
-//Login
-
 fun Route.perfil() {
 
     //Verifica se tem perfil logado
@@ -867,6 +860,7 @@ fun Route.perfilMedico() {
     get("/perfil/medico/{id?}/consultas"){
         val idPessoa = call.parameters["id"]
         val validado = sistema.validaMedico(idPessoa.toString())
+        var medicoConsultas = mutableListOf<Consulta>()
         var error = ServerError(
             HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
                     "continuar!"
@@ -876,10 +870,11 @@ fun Route.perfilMedico() {
         }else{
             if(validado){
                 for (i in 0 until sistema.listConsulta.size) {
-                    if (sistema.listConsulta[i].idPaciente == idPessoa) {
-                        call.respond(sistema.listConsulta[i])
+                    if (sistema.listConsulta[i].idMedico == idPessoa) {
+                        medicoConsultas.add(sistema.listConsulta[i])
                     }
                 }
+                call.respond(medicoConsultas)
             }else{
                 error = ServerError(
                     HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro id para " +
@@ -1063,19 +1058,21 @@ fun Route.perfilPaciente() {
     get("/perfil/paciente/{id?}/buscarConsultas") {
         val idPessoa = call.parameters["id"]
         val validado = sistema.validaPaciente(idPessoa.toString())
+        var pacienteConsultas = mutableListOf<Consulta>()
         var error = ServerError(
             HttpStatusCode.NotFound.value, "Id não encontrado na requisição . Passe o parametro id para " +
                     "continuar!"
         )
-        if (idPessoa != null) {
+        if (idPessoa == null) {
             call.respond(HttpStatusCode.NotFound, error)
         } else {
             if (validado) {
                 for (i in 0 until sistema.listConsulta.size) {
                     if (sistema.listConsulta[i].idPaciente == idPessoa) {
-                        call.respond(sistema.listConsulta[i])
+                        pacienteConsultas.add(sistema.listConsulta[i])
                     }
                 }
+                call.respond(pacienteConsultas)
             }else {
                 error = ServerError(
                     HttpStatusCode.Unauthorized.value, "Id inválido . Passe o parametro correto para " +

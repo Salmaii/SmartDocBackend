@@ -5,7 +5,7 @@ class Consulta {
     var idMedico: String? = null
     var idPaciente: String? = null
     var idFuncionario: String? = null
-    var local: Local? = null
+    var local: String? = null
     var data: String? = null
     var hora: String? = null
     var motivo: String? = null
