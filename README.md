@@ -11,9 +11,8 @@ O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
   <img src="https://github.com/Salmaii/SmartDoc/blob/main/src/main/resources/SmartDoc%20Presentation%20Gif.gif" alt="SmartDoc Presentation Gif" />
   </p>
   
-  <p align="center">
-      ![SmartDoc Presentation Gif](https://github.com/Salmaii/SmartDoc/blob/main/src/main/resources/SmartDoc%20Presentation%20Gif.gif)
-  </p>
+  [SmartDoc Presentation Video](https://youtu.be/ZYmp9GjQkII "SmartDoc Presentation")
+
   
 ### Tecnologias utilizadas
 
