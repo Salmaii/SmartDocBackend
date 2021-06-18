@@ -7,7 +7,7 @@ as consultas marcadas podendo ter um maior controle das mesmas.
 O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
 <p>
   
-  https://youtu.be/<https://youtu.be/ZYmp9GjQkII>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/ZYmp9GjQkII" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Tecnologias utilizadas
 
