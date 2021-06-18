@@ -6,7 +6,7 @@ Diretamente pela API o usuário paciente/médico/funcionário tem acesso
 as consultas marcadas podendo ter um maior controle das mesmas.
 O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
 <p>
-
+  
 ### Tecnologias utilizadas
 
 <h4><b>
