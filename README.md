@@ -12,7 +12,7 @@ O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
   </p>
   
   <p align="center">
-    [SmartDoc Presentation Video](https://youtu.be/ZYmp9GjQkII "SmartDoc Presentation")
+    https://youtu.be/ZYmp9GjQkII
   </p>
 
   
