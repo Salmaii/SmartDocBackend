@@ -7,6 +7,8 @@ as consultas marcadas podendo ter um maior controle das mesmas.
 O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
 <p>
   
+  ![SmartDoc Presentation Gif](https://github.com/Salmaii/SmartDoc/blob/main/src/main/resources/SmartDoc%20Presentation%20Gif.gif)
+  
 ### Tecnologias utilizadas
 
 <h4><b>
