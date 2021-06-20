@@ -78,15 +78,6 @@ O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
 | DELETE | http://localhost:9999/perfil/paciente/{id?}/delete                                 | Delete do perfil de paciente de id{numCartaoConsulta?}          |
 
 
-
-
-## Integrantes do Projeto
-
-| Nome                              | Matrícula  |
-| --------------------------------- | ---------- |
-| Gabriel Henrique Alberto de Jesus | 1812130083 |
-| Gabriel Salmai Camargo Farias     | 1922130017 |
-
 ## Próximos passos
 
 <h4><b>
@@ -100,3 +91,11 @@ O SmartDoc funciona como um intermedio do paciente e da clinica/médico.
 - Mostrar os profissionais/clinicas que façam a consulta mais proxima, em tempo e/ou distancia <br>
 - Mostrar os profissionais/clinicas atendam por especializações <br>
   </b></h4>
+
+
+## Integrantes do Projeto
+
+| Nome                              | Matrícula  |
+| --------------------------------- | ---------- |
+| Gabriel Henrique Alberto de Jesus | 1812130083 |
+| Gabriel Salmai Camargo Farias     | 1922130017 |
